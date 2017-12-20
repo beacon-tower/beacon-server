@@ -1,0 +1,54 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+server:
+  port: 8899
+  tomcat:
+    uri-encoding: utf-8
+    max-threads: 1000
+    min-spare-threads: 30
+
+# ===================================================================
+# datasource config
+# druid alibaba database connection pool
+# ===================================================================
+spring:
+  # 环境 dev(开发)|test(测试)|prod(生产)
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mvc:
+    static-path-pattern: swagger-ui.html,/webjars/**
+    resources:
+      static-locations: classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /doc/swagger.json

@@ -1,0 +1,18 @@
+# Created by .ignore support plugin (hsz.mobi)
+/.idea/
+/api/target/
+/api/api.iml
+/asch/target/
+/asch/asch.iml
+/commons/target/
+/commons/commons.iml
+/dao/target/
+/dao/dao.iml
+/entity/target/
+/entity/entity.iml
+/enums/target/
+/enums/enums.iml
+/logs/
+/beacon-server.iml
+/dump.rdb
+/flag.pid
