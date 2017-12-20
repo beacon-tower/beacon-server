@@ -1,2 +1,2 @@
 # beacon-server
-java restful api
+java server restful api
