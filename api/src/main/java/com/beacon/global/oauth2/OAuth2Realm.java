@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import java.util.Set;
 
 import static com.beacon.commons.code.PublicResCode.USER_NO_LOGIN;
-import static com.beacon.enums.code.UserResCode.USER_LOCK;
 
 /**
  * 认证
@@ -74,10 +73,6 @@ public class OAuth2Realm extends AuthorizingRealm {
 
         //查询用户信息
         User user = userService.findById(userId);
-        //账号锁定
-        if (user.getLocked()) {
-            ExceptionUtils.throwResponseException(USER_LOCK);
-        }
         return new SimpleAuthenticationInfo(user, accessToken, getName());
     }
 }

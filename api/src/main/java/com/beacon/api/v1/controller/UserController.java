@@ -2,6 +2,8 @@ package com.beacon.api.v1.controller;
 
 import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
+import com.beacon.entity.User;
+import com.beacon.enums.code.UserResCode;
 import com.beacon.global.session.TokenManager;
 import com.beacon.global.session.TokenModel;
 import com.beacon.service.UserService;
@@ -14,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
-import static com.beacon.commons.code.PublicResCode.PARAMS_IS_NULL;
-import static com.beacon.enums.code.UserResCode.PASSWORD_FORMAT_ERROR;
-import static com.beacon.enums.code.UserResCode.PASSWORD_NOT_SAME;
+import static com.beacon.enums.code.UserResCode.MOBILE_EXIST;
 
 /**
  * 用户管理
@@ -36,47 +36,60 @@ public class UserController {
     @Inject
     private TokenManager tokenManager;
 
-    @ApiOperation("用户注册")
+    @ApiOperation(value = "用户注册", notes = "第一步，输入手机号，验证码", response = ResData.class)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "账号", required = true, paramType = "form", dataType = "string"),
-            @ApiImplicitParam(name = "password", value = "登录密码", required = true, paramType = "form", dataType = "string"),
-            @ApiImplicitParam(name = "repeatPassword", value = "重复密码", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "code", value = "验证码", required = true, paramType = "form", dataType = "string"),
     })
-    @PostMapping("register")
-    public ResData register(@RequestParam String username,
-                            @RequestParam String password,
-                            @RequestParam String repeatPassword) {
+    @PostMapping("register/first/step")
+    public ResData registerFirstStep(@RequestParam String mobile,
+                                     @RequestParam String code) {
+        AssertUtils.isMobile(UserResCode.MOBILE_FORMAT_ERROR, mobile);
+        AssertUtils.length(UserResCode.CODE_ERROR, 6, code);
 
-        AssertUtils.notNull(PARAMS_IS_NULL, new String[]{"username", "password", "repeatPassword"},
-                username, password, repeatPassword);
-        AssertUtils.length(PASSWORD_FORMAT_ERROR, 8, 32, password);
-        AssertUtils.isTrue(PASSWORD_NOT_SAME, password.equals(repeatPassword));
+        //校验手机号
+        User user = userService.findByMobile(mobile);
+        AssertUtils.isNull(MOBILE_EXIST, user);
+        //TODO 校验手机验证码
 
-        userService.register(username, password);
-
-        return this.login(username, password);
+        return ResData.build(userService.registerFirstStep(mobile));
     }
 
-    @ApiOperation(value = "用户登录")
+    @ApiOperation(value = "用户注册", notes = "第二步，获取钱包密钥和地址，更换钱包密钥也调用此接口", response = ResData.class)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "账号", required = true, paramType = "form", dataType = "string"),
-            @ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
+    })
+    @PostMapping("register/second/step")
+    public ResData registerSecondStep(@RequestParam String mobile) {
+        AssertUtils.isMobile(UserResCode.MOBILE_FORMAT_ERROR, mobile);
+
+        return userService.registerSecondStep(mobile);
+    }
+
+    @ApiOperation(value = "用户注册", notes = "第三步，输入昵称和钱包密钥校验", response = ResData.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "nickname", value = "昵称", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "secret", value = "钱包密钥", required = true, paramType = "form", dataType = "string"),
+    })
+    @PostMapping("register/third/step")
+    public ResData registerThirdStep(@RequestParam String mobile,
+                                    @RequestParam String nickname,
+                                    @RequestParam String secret) {
+        AssertUtils.isMobile(UserResCode.MOBILE_FORMAT_ERROR, mobile);
+
+        return userService.registerThirdStep(mobile, nickname, secret);
+    }
+
+    @ApiOperation(value = "用户登录", notes = "用户输入手机号/邮箱、钱包密钥登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "手机号/邮箱", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "secret", value = "钱包密钥", required = true, paramType = "form", dataType = "string"),
     })
     @PostMapping("login")
     public ResData login(@RequestParam String username,
-                         @RequestParam String password) {
-
-        AssertUtils.notNull(PARAMS_IS_NULL, new String[]{"username", "password"}, username, password);
-        AssertUtils.length(PASSWORD_FORMAT_ERROR, 8, 32, password);
-
-        //用户登录
-        Integer userId = userService.login(username, password);
-
-        String token = tokenManager.createToken(userId, TokenModel.TYPE_API);
-
-        ResData resData = ResData.buildSuccess();
-        resData.putData("token", token);
-        return resData;
+                         @RequestParam String secret) {
+        return userService.login(username, secret);
     }
 
     @ApiOperation(value = "用户信息")

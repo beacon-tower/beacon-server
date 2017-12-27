@@ -1,19 +1,25 @@
 package com.beacon.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.beacon.asch.sdk.AschResult;
 import com.beacon.commons.base.BaseDao;
 import com.beacon.commons.base.BaseService;
+import com.beacon.commons.redis.RedisHelper;
+import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.dao.UserDao;
 import com.beacon.entity.User;
-import com.beacon.utils.PasswordUtils;
+import com.beacon.global.session.TokenManager;
+import com.beacon.global.session.TokenModel;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Map;
 import java.util.Set;
 
-import static com.beacon.enums.code.UserResCode.MOBILE_EXIST;
-import static com.beacon.enums.code.UserResCode.MOBILE_NOT_EXIST;
-import static com.beacon.enums.code.UserResCode.PASSWORD_ERROR;
+import static com.beacon.commons.code.PublicResCode.ASCH_CALL_FAIL;
+import static com.beacon.enums.code.UserResCode.*;
+import static com.beacon.global.constant.Constant.REGISTER_MOBILE;
 
 /**
  * app用户
@@ -25,8 +31,19 @@ import static com.beacon.enums.code.UserResCode.PASSWORD_ERROR;
 @Service
 public class UserService extends BaseService<User, Integer> {
 
+    public static final Long MOBILE_EXPIRE = 24 * 3600 * 1000L;
+
     @Inject
     private UserDao userDao;
+
+    @Inject
+    private RedisHelper redisHelper;
+
+    @Inject
+    private AschService aschService;
+
+    @Inject
+    private TokenManager tokenManager;
 
     @Override
     public BaseDao<User, Integer> getBaseDao() {
@@ -37,37 +54,105 @@ public class UserService extends BaseService<User, Integer> {
         return userDao.findByUsername(username);
     }
 
+    public User findByMobile(String mobile) {
+        return userDao.findByMobile(mobile);
+    }
+
     public Set<String> findPermsByUser(User user) {
         return null;
     }
 
     /**
-     * 用户注册
+     * 用户注册, 第一步，保存注册的手机号
+     * 临时存到缓存中，一旦注册成功立即移除,
+     * 如果一天内没有注册，自动移除
      *
-     * @param username 登录账号
-     * @param password 登录密码
+     * @param mobile 手机号
      */
-    public void register(String username, String password) {
-        User user = this.findByUsername(username);
-        AssertUtils.isNull(MOBILE_EXIST, user);
+    public boolean registerFirstStep(String mobile) {
+        return redisHelper.setExpire(REGISTER_MOBILE + mobile, mobile, MOBILE_EXPIRE);
+    }
 
-        user = new User();
-        user.setUsername(username);
-        user.setPassword(PasswordUtils.createHash(password));
-        this.save(user);
+    /**
+     * 用户注册, 第二步，校验注册手机号
+     * 调用asch sdk新建账户,
+     * 手机号和密钥绑定，存入缓存，用于校验，刷新缓存时间
+     *
+     * @param mobile 手机号
+     * @return 账户信息
+     */
+    public ResData registerSecondStep(String mobile) {
+        AssertUtils.isTrue(MOBILE_NOT_EXIST, redisHelper.exists(REGISTER_MOBILE + mobile));
+        AschResult aschResult = aschService.newAccounts();
+        if (aschResult.isSuccessful()) {
+            Map<String, Object> parseMap = aschResult.parseMap();
+            String secret = (String) parseMap.get("secret");
+            String address = (String) parseMap.get("address");
+            redisHelper.setExpire(REGISTER_MOBILE + mobile, secret, MOBILE_EXPIRE);
+            return ResData.buildSuccess()
+                    .putData("secret", secret)
+                    .putData("address", address);
+        }
+        return ResData.buildFailed(ASCH_CALL_FAIL, aschResult.getError());
+    }
+
+    /**
+     * 用户注册, 第三步
+     * 校验注册手机号、校验密钥
+     * 保存数据到数据库
+     *
+     * @param mobile 手机号
+     * @return token信息
+     */
+    public ResData registerThirdStep(String mobile, String nickname, String secret) {
+        AssertUtils.isTrue(MOBILE_NOT_EXIST, redisHelper.exists(REGISTER_MOBILE + mobile));
+        //再次校验手机号不存在库中
+        User user = this.findByMobile(mobile);
+        AssertUtils.isNull(MOBILE_EXIST, user);
+        String cacheSecret = (String) redisHelper.get(REGISTER_MOBILE + mobile);
+        AssertUtils.isTrue(MOBILE_EXIST, secret.equals(cacheSecret));
+        AschResult aschResult = aschService.secureLogin(secret);
+        if (aschResult.isSuccessful()) {
+            Map<String, Object> parseMap = aschResult.parseMap();
+            String account = parseMap.get("account").toString();
+            String address = (String) JSONObject.parseObject(account).get("address");
+            //保存数据
+            user = new User();
+            user.setMobile(mobile);
+            user.setNickname(nickname);
+            user.setPurseAddress(address);
+            super.save(user);
+            //清空缓存数据
+            redisHelper.remove(REGISTER_MOBILE + mobile);
+            //创建token
+            String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
+            return ResData.buildSuccess()
+                    .putData("token", token);
+        }
+        return ResData.buildFailed(ASCH_CALL_FAIL, aschResult.getError());
     }
 
     /**
      * 用户登录
      *
      * @param username 登录账号
-     * @param password 登录密码
+     * @param secret 钱包密钥
      * @return 登录用户id
      */
-    public Integer login(String username, String password) {
+    public ResData login(String username, String secret) {
         User user = this.findByUsername(username);
-        AssertUtils.notNull(MOBILE_NOT_EXIST, user);
-        AssertUtils.isTrue(PASSWORD_ERROR, PasswordUtils.validatePassword(password, user.getPassword()));
-        return user.getId();
+        AssertUtils.notNull(USERNAME_ERROR, user);
+        AschResult aschResult = aschService.secureLogin(secret);
+        if (aschResult.isSuccessful()) {
+            Map<String, Object> parseMap = aschResult.parseMap();
+            String account = parseMap.get("account").toString();
+            String address = (String) JSONObject.parseObject(account).get("address");
+            AssertUtils.isTrue(ADDRESS_ERROR, user.getPurseAddress().equals(address));
+            //创建token
+            String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
+            return ResData.buildSuccess()
+                    .putData("token", token);
+        }
+        return ResData.buildFailed(ASCH_CALL_FAIL, aschResult.getError());
     }
 }

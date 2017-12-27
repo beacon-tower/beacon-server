@@ -25,4 +25,9 @@ public class Constant {
      * 超级管理员
      */
     public static final String ADMIN = "admin";
+
+    /**
+     * 注册手机号
+     */
+    public static final String REGISTER_MOBILE = "beacon:cache:register:mobile:";
 }

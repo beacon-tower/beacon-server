@@ -5,18 +5,17 @@ package com.beacon.asch.sdk;
  */
 public class TestData {
 
-    //public static final String root = "http://127.0.0.1:4096";
-    //public static final String root = "http://106.14.156.245:4096";
-    public static final String root = "http://101.200.123.124:4096";
-    //public static final String secret = "early sugar cannon mansion expose tunnel piece manual destroy exhaust helmet rather";
-    public static final String secret = "explain sea dismiss sea bring skate museum little lizard yard under stay";
-    public static final String address = "AHxH6WJR2KazNjqS45hdrZcqzcfhB3TotF";
-    //public static final String address = "7286541193277597873";
-    public static final String secondSecret = "asch111111";
-    public static final String userName = "asch_g2";
+    //luckyhua
+    public static final String root = "http://sofly.cc:4096";
+    public static final String secret = "ten mystery ketchup trim prosper expose switch what frame furnace parade fruit";
+//    public static final String address = "ACvpFUYnFLSSBgoHtjRbvFck7ABBPm6udy";
+    public static final String address = "AJxkNf1SV8PJ4DFqDnoUUACHbx7mbdXgNE";
+
+    public static final String secondSecret = "zhough212";
+    public static final String userName = "asch_g001";
 
     //asch_g101 11705168753296944226 00dd0e70fe22e9b580ba0ccf696f1d108a6475bb303b8689947ba346b0b02ad9
-    public static final String targetAddress = "11705168753296944226";
+    public static final String targetAddress = "A8v3qQm3C6yRjvdjgU1xvhxAfFcGBU3S6n";
 
     //asch_g101	11705168753296944226 00dd0e70fe22e9b580ba0ccf696f1d108a6475bb303b8689947ba346b0b02ad9
     //asch_g96	16093201530526106149 0225c340addf24211f4b51ea24cb0565c67f09600f57bad89af350b38b08a366
@@ -36,11 +35,11 @@ public class TestData {
 
     public static final String transactionId = "12936058387774240556";
 
-    public static final String senderPublicKey = "fd6df6dc35852ac7edcc081eb5195718e0c77a6ad4f8157eeb78c865fa83efc4";
+    public static final String senderPublicKey = "9d986947594da0223958a88df625f0e8fb1f4bcc278845b3fe22b7f5aeef50ab";
 
-    public static final String dappId = "2f4540baf0c87ee27e27880e2ad156b67447e5351422e2e98c2593c788fae292";
+    public static final String dappId = "9a5701386cbdd06f0e882bda686c8da1589f5e0da9c97f4451513d113ed305eb";
 
-    public static final String dappAddress = "AHxH6WJR2KazNjqS45hdrZcqzcfhB3TotF";
+    public static final String dappAddress = "ACvpFUYnFLSSBgoHtjRbvFck7ABBPm6udy";
 
     public static String publicKey(){
         return AschSDK.Helper.getPublicKey(secret);

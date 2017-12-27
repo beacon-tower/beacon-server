@@ -6,7 +6,7 @@ import com.beacon.asch.sdk.dto.query.QueryParameters;
  * Asch账户接口
  *
  * @author eagle
- * 参见 https://github.com/AschPlatform/asch-docs/blob/master/asch_http_interface.md#21-%E8%B4%A6%E6%88%B7accounts
+ *         参见 https://github.com/AschPlatform/asch-docs/blob/master/asch_http_interface.md#21-%E8%B4%A6%E6%88%B7accounts
  */
 public interface Account extends AschInterface {
 
@@ -129,4 +129,16 @@ public interface Account extends AschInterface {
     //accounts	json	账户信息元组，每个元素包含地址、余额、公钥
     AschResult getTopAccounts(QueryParameters parameters);
 
+
+    //接口地址：/api/accounts/new
+    //请求方式：get
+    //支持格式：无
+    //请求参数：无
+    //返回参数说明：
+    //success	boole	是否成功获得response数据
+    //secret	string	密码
+    //publicKey	string	公钥
+    //privateKey	string	私钥
+    //address	string	地址
+    AschResult getNewAccounts();
 }

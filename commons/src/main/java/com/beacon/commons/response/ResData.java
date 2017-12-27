@@ -49,12 +49,20 @@ public class ResData implements Serializable {
         this.msg = msg;
     }
 
+    public static ResData build(Boolean isSuccess) {
+        return isSuccess ? new ResData(PublicResCode.SUCCESS) : new ResData(PublicResCode.SERVER_EXCEPTION);
+    }
+
     public static ResData buildSuccess() {
         return new ResData(PublicResCode.SUCCESS);
     }
 
     public static ResData buildFailed(BaseResCode resCode) {
         return new ResData(resCode);
+    }
+
+    public static ResData buildFailed(BaseResCode resCode, String msg) {
+        return new ResData(resCode.getCode(), msg);
     }
 
     public Integer getCode() {
@@ -81,17 +89,19 @@ public class ResData implements Serializable {
         this.data = data;
     }
 
-    public void putData(String key, Object value) {
+    public ResData putData(String key, Object value) {
         if (value instanceof Describle) {
             this.data.put(key, ((Describle) value).describle());
-            return;
+            return this;
         }
         this.data.put(key, value);
+        return this;
     }
 
-    public void putBeanDataAll(Object bean) {
+    public ResData putBeanDataAll(Object bean) {
         String key = ResultDataManager.getBeanName(bean);
         data.put(key, bean);
+        return this;
     }
 
     /**
@@ -100,13 +110,15 @@ public class ResData implements Serializable {
      * @param bean   the field that return to app
      * @param fields 。。
      */
-    public void putBeanData(Object bean, String... fields) {
+    public ResData putBeanData(Object bean, String... fields) {
         String key = ResultDataManager.getBeanName(bean);
         putBeanData(key, bean, Boolean.FALSE, fields);
+        return this;
     }
 
-    public void putBeanData(String key, Object bean, String... fields) {
+    public ResData putBeanData(String key, Object bean, String... fields) {
         putBeanData(key, bean, Boolean.FALSE, fields);
+        return this;
     }
 
     /**
@@ -116,16 +128,16 @@ public class ResData implements Serializable {
      * @param bean   data
      * @param fields fields is bean data
      */
-    public void putBeanData(String key, Object bean, Boolean isExclude, String... fields) {
+    public ResData putBeanData(String key, Object bean, Boolean isExclude, String... fields) {
         if (bean instanceof Map) {
             data.put(key, bean);
-            return;
+            return this;
         }
 
         if (fields == null || fields.length == 0) {
             ResultDataManager.initIntValue(bean);
             data.put(key, bean);
-            return;
+            return this;
         }
 
         Map<String, Object> values;
@@ -135,13 +147,14 @@ public class ResData implements Serializable {
             values = ResultDataManager.getValues(bean, fields);
         }
         data.put(key, values);
+        return this;
     }
 
     @SuppressWarnings("unchecked")
-    public void putBeanFields(Object bean) {
+    public ResData putBeanFields(Object bean) {
         if (bean instanceof Map) {
             data.putAll((Map<? extends String, ?>) bean);
-            return;
+            return this;
         }
         for (Class c = bean.getClass(); c.getSuperclass() != null; c = c.getSuperclass()) {
             for (Field field : c.getDeclaredFields()) {
@@ -155,10 +168,12 @@ public class ResData implements Serializable {
                 }
             }
         }
+        return this;
     }
 
-    public void putListData(String key, List<?> listBean, String... fields) {
+    public ResData putListData(String key, List<?> listBean, String... fields) {
         putListData(key, listBean, Boolean.FALSE, fields);
+        return this;
     }
 
     /**
@@ -170,13 +185,13 @@ public class ResData implements Serializable {
      * @see #(List, String...)
      */
     @SuppressWarnings("unchecked")
-    public void putListData(String key, List<?> listBean, Boolean isExclude, String... fields) {
+    public ResData putListData(String key, List<?> listBean, Boolean isExclude, String... fields) {
 
         List<Map<String, Object>> retData = new ArrayList<>();
 
         if (listBean == null) {
             data.put(key, new ArrayList<>());
-            return;
+            return this;
         }
 
         for (Object bean : listBean) {
@@ -199,6 +214,7 @@ public class ResData implements Serializable {
             retData.add(values);
         }
         data.put(key, retData);
+        return this;
     }
 
     @Override

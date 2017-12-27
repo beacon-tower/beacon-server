@@ -115,4 +115,13 @@ public class AccountService extends AschRESTService implements Account {
             return fail(ex);
         }
     }
+
+    @Override
+    public AschResult getNewAccounts() {
+        try {
+            return get(AschServiceUrls.Account.GET_NEW_ACCOUNTS);
+        } catch (Exception ex) {
+            return fail(ex);
+        }
+    }
 }
