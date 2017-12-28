@@ -17,8 +17,9 @@ public enum PublicResCode implements BaseResCode {
     SERVER_EXCEPTION(500, "服务器异常!"),
     OPERATE_FAIL(600, "操作失败!"),
     ASCH_CALL_FAIL(700, "asch call fail, {0}"),
-    PARAMS_IS_NULL(1001, "{0}参数不能为空!"),
-    PARAMS_EXCEPTION(1002, "{0}参数异常!"),;
+    PARAMS_IS_NULL(1001, "{0}为必要参数，不能为空!"),
+    PARAMS_EXCEPTION(1002, "{0}参数异常!"),
+    PARAMS_TYPE_EXCEPTION(1003, "{0}参数类型不匹配，类型应该为{1}!"),;
 
     private final int code;
     private final String msg;
