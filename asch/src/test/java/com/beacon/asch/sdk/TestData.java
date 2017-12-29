@@ -37,7 +37,7 @@ public class TestData {
 
     public static final String senderPublicKey = "9d986947594da0223958a88df625f0e8fb1f4bcc278845b3fe22b7f5aeef50ab";
 
-    public static final String dappId = "9a5701386cbdd06f0e882bda686c8da1589f5e0da9c97f4451513d113ed305eb";
+    public static final String dappId = "865179a276dfba7f552d76824c732bd5d506e890c9c3d8fc7e0665d5b1db9263";
 
     public static final String dappAddress = "ACvpFUYnFLSSBgoHtjRbvFck7ABBPm6udy";
 
