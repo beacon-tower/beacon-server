@@ -14,6 +14,7 @@ import com.beacon.global.session.TokenModel;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,7 +82,7 @@ public class UserService extends BaseService<User, Integer> {
      * @param mobile 手机号
      * @return 账户信息
      */
-    public ResData registerSecondStep(String mobile) {
+    public ResData<Map<String, Object>> registerSecondStep(String mobile) {
         AssertUtils.isTrue(MOBILE_NOT_EXIST, redisHelper.exists(REGISTER_MOBILE + mobile));
         AschResult aschResult = aschService.newAccounts();
         if (aschResult.isSuccessful()) {
@@ -89,11 +90,12 @@ public class UserService extends BaseService<User, Integer> {
             String secret = (String) parseMap.get("secret");
             String address = (String) parseMap.get("address");
             redisHelper.setExpire(REGISTER_MOBILE + mobile, secret, MOBILE_EXPIRE);
-            return ResData.buildSuccess()
-                    .putData("secret", secret)
-                    .putData("address", address);
+            Map<String, Object> map = new HashMap<>(2);
+            map.put("secret", secret);
+            map.put("address", address);
+            return ResData.success(map);
         }
-        return ResData.buildFailed(ASCH_CALL_FAIL, aschResult.getError());
+        return ResData.error(ASCH_CALL_FAIL, aschResult.getError());
     }
 
     /**
@@ -104,7 +106,7 @@ public class UserService extends BaseService<User, Integer> {
      * @param mobile 手机号
      * @return token信息
      */
-    public ResData registerThirdStep(String mobile, String nickname, String secret) {
+    public ResData<String> registerThirdStep(String mobile, String nickname, String secret) {
         AssertUtils.isTrue(MOBILE_NOT_EXIST, redisHelper.exists(REGISTER_MOBILE + mobile));
         //再次校验手机号不存在库中
         User user = this.findByMobile(mobile);
@@ -126,20 +128,19 @@ public class UserService extends BaseService<User, Integer> {
             redisHelper.remove(REGISTER_MOBILE + mobile);
             //创建token
             String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
-            return ResData.buildSuccess()
-                    .putData("token", token);
+            return ResData.success(token);
         }
-        return ResData.buildFailed(ASCH_CALL_FAIL, aschResult.getError());
+        return ResData.error(ASCH_CALL_FAIL, aschResult.getError());
     }
 
     /**
      * 用户登录
      *
      * @param username 登录账号
-     * @param secret 钱包密钥
+     * @param secret   钱包密钥
      * @return 登录用户id
      */
-    public ResData login(String username, String secret) {
+    public ResData<String> login(String username, String secret) {
         User user = this.findByUsername(username);
         AssertUtils.notNull(USERNAME_ERROR, user);
         AschResult aschResult = aschService.secureLogin(secret);
@@ -150,9 +151,8 @@ public class UserService extends BaseService<User, Integer> {
             AssertUtils.isTrue(ADDRESS_ERROR, user.getPurseAddress().equals(address));
             //创建token
             String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
-            return ResData.buildSuccess()
-                    .putData("token", token);
+            return ResData.success(token);
         }
-        return ResData.buildFailed(ASCH_CALL_FAIL, aschResult.getError());
+        return ResData.error(ASCH_CALL_FAIL, aschResult.getError());
     }
 }

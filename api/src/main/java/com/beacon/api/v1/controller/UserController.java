@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 import static com.beacon.enums.code.UserResCode.MOBILE_EXIST;
 
@@ -27,7 +28,7 @@ import static com.beacon.enums.code.UserResCode.MOBILE_EXIST;
  */
 @RestController
 @RequestMapping("api/v1/user")
-@Api(value = "api/v1/user", description = "用户管理")
+@Api(value = "api/v1/user", tags = "用户管理")
 public class UserController {
 
     @Inject
@@ -55,12 +56,12 @@ public class UserController {
         return ResData.build(userService.registerFirstStep(mobile));
     }
 
-    @ApiOperation(value = "用户注册", notes = "第二步，获取钱包密钥和地址，更换钱包密钥也调用此接口", response = ResData.class)
+    @ApiOperation(value = "用户注册", notes = "第二步，获取钱包密钥和地址，更换钱包密钥也调用此接口", response = ResData.class, responseContainer = "Map")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
     })
     @PostMapping("register/second/step")
-    public ResData registerSecondStep(@RequestParam String mobile) {
+    public ResData<Map<String, Object>> registerSecondStep(@RequestParam String mobile) {
         AssertUtils.isMobile(UserResCode.MOBILE_FORMAT_ERROR, mobile);
 
         return userService.registerSecondStep(mobile);
@@ -73,7 +74,7 @@ public class UserController {
             @ApiImplicitParam(name = "secret", value = "钱包密钥", required = true, paramType = "form", dataType = "string"),
     })
     @PostMapping("register/third/step")
-    public ResData registerThirdStep(@RequestParam String mobile,
+    public ResData<String> registerThirdStep(@RequestParam String mobile,
                                     @RequestParam String nickname,
                                     @RequestParam String secret) {
         AssertUtils.isMobile(UserResCode.MOBILE_FORMAT_ERROR, mobile);
@@ -81,23 +82,21 @@ public class UserController {
         return userService.registerThirdStep(mobile, nickname, secret);
     }
 
-    @ApiOperation(value = "用户登录", notes = "用户输入手机号/邮箱、钱包密钥登录")
+    @ApiOperation(value = "用户登录", notes = "用户输入手机号/邮箱、钱包密钥登录", response = ResData.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "手机号/邮箱", required = true, paramType = "form", dataType = "string"),
             @ApiImplicitParam(name = "secret", value = "钱包密钥", required = true, paramType = "form", dataType = "string"),
     })
     @PostMapping("login")
-    public ResData login(@RequestParam String username,
+    public ResData<String> login(@RequestParam String username,
                          @RequestParam String secret) {
         return userService.login(username, secret);
     }
 
-    @ApiOperation(value = "用户信息")
+    @ApiOperation(value = "用户信息", response = User.class)
     @GetMapping("info")
-    public ResData userInfo() {
-        ResData resData = ResData.buildSuccess();
-        resData.putData("user", ShiroUtils.getUser());
-        return resData;
+    public ResData<User> userInfo() {
+        return ResData.success(ShiroUtils.getUser());
     }
 
     @ApiOperation(value = "用户登出")
@@ -105,6 +104,6 @@ public class UserController {
     public ResData logout() {
         tokenManager.delToken(ShiroUtils.getUserId(), TokenModel.TYPE_API);
         ShiroUtils.logout();
-        return ResData.buildSuccess();
+        return ResData.success();
     }
 }

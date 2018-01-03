@@ -55,7 +55,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
         if (StringUtils.isBlank(token)) {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setContentType("application/json;charset=utf-8");
-            String json = new Gson().toJson(new ResData(USER_NO_LOGIN));
+            String json = new Gson().toJson(ResData.error(USER_NO_LOGIN));
             httpResponse.getWriter().print(json);
             return false;
         }
@@ -72,7 +72,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
             Throwable throwable = e.getCause() == null ? e : e.getCause();
             log.error("login exception = {}", throwable.getMessage());
 
-            String json = new Gson().toJson(new ResData(USER_NO_LOGIN));
+            String json = new Gson().toJson(ResData.error(USER_NO_LOGIN));
             httpResponse.getWriter().print(json);
         } catch (IOException e1) {
             log.error("login exception = ", e1);

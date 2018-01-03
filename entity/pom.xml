@@ -22,24 +22,6 @@
             <groupId>com.beacon</groupId>
             <artifactId>commons</artifactId>
         </dependency>
-
-        <!-- swagger api -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>LATEST</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mapstruct</groupId>
-                    <artifactId>mapstruct</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>LATEST</version>
-        </dependency>
     </dependencies>
 
 </project>
