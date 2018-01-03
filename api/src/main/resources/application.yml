@@ -52,3 +52,7 @@ springfox:
     swagger:
       v2:
         path: /doc/swagger.json
+      title: Spring Boot中使用Swagger2构建RESTFUL API
+      version: v1.0.0
+      description: 基于asch链开发的应用api文档
+      basePackage: com.beacon
