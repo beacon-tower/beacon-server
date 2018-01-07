@@ -54,18 +54,18 @@ wait_for_sometime() {
 }
 
 #启动服务程序
-start() {
-    if [[ "r" = "$1" ]]; then
+service_start() {
+    if [[ "r" = "$2" ]]; then
         echo "Start server by remote"
-        nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5013 -Dspring.profiles.active="$3" -cp ${application} >$null_buffer 2>&1 &
+        nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5013 -Dspring.profiles.active="$1" -cp ${application} >$null_buffer 2>&1 &
     else
         echo "Start server"
-        nohup java -Dspring.profiles.active="$3" -cp ${application} >$null_buffer 2>&1 &
+        nohup java -Dspring.profiles.active="$1" -cp ${application} >$null_buffer 2>&1 &
     fi
 }
 
 #关闭服务程序
-stop() {
+service_stop() {
     echo "Stop server"
     local checkResult=1
     if [ -f $pid_file ]; then
@@ -101,7 +101,7 @@ stop() {
 }
 
 #查看服务程序状态
-status() {
+service_status() {
     local checkResult=1
     if [ -f $pid_file ]; then
         check_process `cat $pid_file`
@@ -123,21 +123,21 @@ status() {
 
 case "${1:-''}" in
     "start")
-        liegou_start $2 $3
+        service_start $2 $3
         ;;
     "stop")
-        liegou_stop
+        service_stop
         ;;
     "restart")
         echo "restart server"
-        liegou_stop
-        liegou_start $2 $3
+        service_stop
+        service_start $2 $3
         ;;
     "status")
-        liegou_status
+        service_status
         ;;
     *)
-        echo "Usage: $SELF start|start r test|stop|restart|restart r|status"
+        echo "Usage: $SELF start test r|stop|restart|status"
         exit 1
         ;;
 esac

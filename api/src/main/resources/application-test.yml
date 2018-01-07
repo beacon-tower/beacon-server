@@ -12,9 +12,9 @@
 
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/beacon_test?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true
+    url: jdbc:mysql://106.14.156.245:3306/beacon_test?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true
     username: root
-    password: admin
+    password: zgh@303497822
     initial-size: 10
     min-idle: 10
     max-active: 100
@@ -36,3 +36,6 @@ spring:
       max-active: 1024
       max-idle: 200
       min-idle: 1
+
+asch:
+  root: http://sofly.cc:4096

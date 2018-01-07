@@ -38,3 +38,6 @@ spring:
       max-active: 1024
       max-idle: 200
       min-idle: 1
+
+asch:
+  root: http://sofly.cc:4096
