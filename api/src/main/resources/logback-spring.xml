@@ -28,7 +28,7 @@
 	</appender>
 
 	<!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
-	<property name="LOG_PATH" value="./logs/lky"/>
+	<property name="LOG_PATH" value="./logs/app"/>
 	<!--写入日志到文件的appender-->
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

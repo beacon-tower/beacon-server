@@ -24,7 +24,7 @@ server:
 spring:
   # 环境 dev(开发)|test(测试)|prod(生产)
   profiles:
-    active: dev
+    active: test
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
