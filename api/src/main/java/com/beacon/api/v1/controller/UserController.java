@@ -93,12 +93,6 @@ public class UserController {
         return userService.login(username, secret);
     }
 
-    @ApiOperation(value = "用户信息", response = User.class)
-    @GetMapping("info")
-    public ResData<User> userInfo() {
-        return ResData.success(ShiroUtils.getUser());
-    }
-
     @ApiOperation(value = "用户登出")
     @GetMapping("logout")
     public ResData logout() {

@@ -26,7 +26,11 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
+
+    @ApiModelProperty(notes = "钱包地址")
+    @Column(nullable = false, length = 64)
+    private String purseAddress;
 
     @ApiModelProperty(notes = "手机号")
     @Column(length = 11)
@@ -36,26 +40,24 @@ public class User extends BaseEntity {
     @Column(length = 64)
     private String email;
 
-    @ApiModelProperty(notes = "用户性别")
-    @Column(length = 4)
-    private String sex;
-
     @ApiModelProperty(notes = "昵称")
     @Column(length = 64)
     private String nickname;
-
-    @ApiModelProperty(notes = "钱包地址")
-    @Column(nullable = false, length = 64)
-    private String purseAddress;
-
-    @ApiModelProperty(notes = "余额")
-    @Column(nullable = false, columnDefinition = "decimal(16,8)")
-    private double balance;
 
     @ApiModelProperty(notes = "头像id")
     @OneToOne
     @JoinColumn(name = "avatar_img_id")
     private Image avatarImage;
+
+    @ApiModelProperty(notes = "用户性别")
+    @Column(length = 4)
+    private String sex;
+
+    @ApiModelProperty(notes = "生日")
+    private Date birthday;
+
+    @ApiModelProperty(notes = "个人简介")
+    private String introduce;
 
     @ApiModelProperty(notes = "创建时间")
     @Column(nullable = false)

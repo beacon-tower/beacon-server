@@ -7,10 +7,14 @@ import com.beacon.commons.base.BaseService;
 import com.beacon.commons.redis.RedisHelper;
 import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
+import com.beacon.commons.utils.StringUtils;
 import com.beacon.dao.UserDao;
 import com.beacon.entity.User;
 import com.beacon.global.session.TokenManager;
 import com.beacon.global.session.TokenModel;
+import com.beacon.pojo.UserInfoDto;
+import com.beacon.utils.BeanUtils;
+import com.beacon.utils.ShiroUtils;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -57,6 +61,10 @@ public class UserService extends BaseService<User, Integer> {
 
     public User findByMobile(String mobile) {
         return userDao.findByMobile(mobile);
+    }
+
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
     }
 
     public Set<String> findPermsByUser(User user) {
@@ -154,5 +162,24 @@ public class UserService extends BaseService<User, Integer> {
             return ResData.success(token);
         }
         return ResData.error(ASCH_CALL_FAIL, aschResult.getError());
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param userInfoDto 用户信息dto
+     */
+    public void editInfo(UserInfoDto userInfoDto) {
+        User currentUser = ShiroUtils.getUser();
+        User user;
+        if (StringUtils.isNotEmpty(userInfoDto.getMobile()) && !currentUser.getMobile().equals(userInfoDto.getMobile())) {
+            user = this.findByMobile(userInfoDto.getMobile());
+            AssertUtils.isNull(MOBILE_EXIST, user);
+        } else if (StringUtils.isNotEmpty(userInfoDto.getEmail())) {
+            user = this.findByEmail(userInfoDto.getEmail());
+            AssertUtils.isNull(EMAIL_EXIST, user);
+        }
+        BeanUtils.copyPropertiesIgnoreNull(userInfoDto, currentUser, "id");
+        super.update(currentUser);
     }
 }

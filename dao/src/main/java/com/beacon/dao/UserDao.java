@@ -19,4 +19,6 @@ public interface UserDao extends BaseDao <User, Integer> {
     User findByUsername(String username);
 
     User findByMobile(String mobile);
+
+    User findByEmail(String email);
 }
