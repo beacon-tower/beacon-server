@@ -46,6 +46,17 @@ spring:
     static-path-pattern: swagger-ui.html,/webjars/**
     resources:
       static-locations: classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+  mail:
+    host: smtp.qq.com  # 如果是163邮箱，修改为smtp.163.com
+    username:  670042085@qq.com
+    password:  303497822@xyz
+    properties:
+      mail:
+        smtp:
+          auth: true #这样才能通过验证
+          starttls:
+              enable: true
+              required: true
 
 springfox:
   documentation:

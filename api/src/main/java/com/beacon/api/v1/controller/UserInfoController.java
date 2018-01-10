@@ -3,17 +3,14 @@ package com.beacon.api.v1.controller;
 import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.commons.utils.StringUtils;
-import com.beacon.entity.User;
 import com.beacon.enums.code.UserResCode;
 import com.beacon.mapper.UserMapper;
 import com.beacon.pojo.UserInfoDto;
 import com.beacon.service.UserService;
-import com.beacon.utils.BeanUtils;
 import com.beacon.utils.ShiroUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -56,4 +53,5 @@ public class UserInfoController {
         userService.editInfo(userInfoDto);
         return ResData.success();
     }
+
 }

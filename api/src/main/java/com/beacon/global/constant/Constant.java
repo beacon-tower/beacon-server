@@ -30,4 +30,9 @@ public class Constant {
      * 注册手机号
      */
     public static final String REGISTER_MOBILE = "beacon:cache:register:mobile:";
+
+    /**
+     * 手机验证码
+     */
+    public static final String MOBILE_CODE = "beacon:cache:sms:mobile_code:";
 }

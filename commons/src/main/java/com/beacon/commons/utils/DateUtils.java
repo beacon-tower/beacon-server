@@ -22,13 +22,13 @@ public class DateUtils {
      * @param pattern 日期格式，SimpleDateFormat能够识别的格式
      * @return 成功返回Date，失败返回null
      */
-    public static String toString(Date date, String pattern) {
+    public static String format(Date date, String pattern) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(date);
     }
 
-    public static String toString(Calendar calendar, String pattern) {
-        return toString(calendar.getTime(), pattern);
+    public static String format(Calendar calendar, String pattern) {
+        return format(calendar.getTime(), pattern);
     }
 
     /**

@@ -14,4 +14,6 @@ public interface BaseDict {
     String getValue();
 
     boolean compare(String key);
+
+    String toString();
 }

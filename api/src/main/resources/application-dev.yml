@@ -39,3 +39,6 @@ spring:
 
 asch:
   root: http://sofly.cc:4096
+
+oss:
+  config: aliyun

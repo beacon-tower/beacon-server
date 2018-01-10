@@ -19,7 +19,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "image", indexes = {@Index(name = "image_sort_index", columnList = "sort_index")})
+@Table(name = "image")
 @ApiModel(value = "Image", description = "系统图片库")
 public class Image extends BaseEntity {
 
@@ -31,21 +31,10 @@ public class Image extends BaseEntity {
     @ApiModelProperty(notes = "图片url")
     private String url;
 
-    @ApiModelProperty(notes = "图片link")
-    private String link;
-
     @ApiModelProperty(notes = "图片类型")
     @Column(length = 32)
     private String type;
 
-    @ApiModelProperty(notes = "排序")
-    @Column(name = "sort_index")
-    private Integer sortIndex;
-
-    @ApiModelProperty(notes = "是否删除（默认否，定期同步删除阿里云的图片）")
-    private Boolean deleted = Boolean.FALSE;
-
-    @ApiModelProperty(notes = "创建时间")
     @Column(nullable = false)
     private Date createTime = new Date();
 }
