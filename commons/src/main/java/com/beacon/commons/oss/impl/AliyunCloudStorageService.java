@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Random;
 
 import static com.beacon.commons.oss.OssConfig.*;
 
@@ -45,25 +44,23 @@ public class AliyunCloudStorageService extends AbstractCloudStorage {
 
     @Override
     public String upload(MultipartFile file) {
+        String path = getPath(ALIYUN_PREFIX);
         try {
             InputStream inputStream = file.getInputStream();
             String originalFilename = file.getOriginalFilename();
             String substring = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
-            Random random = new Random();
-            String fileName = random.nextInt(10000) + System.currentTimeMillis() + substring;
             //创建上传Object的Metadata
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(inputStream.available());
             objectMetadata.setCacheControl("no-cache");
             objectMetadata.setHeader("Pragma", "no-cache");
-            objectMetadata.setContentType(getContentType(fileName.substring(fileName.lastIndexOf("."))));
-            objectMetadata.setContentDisposition("inline;filename=" + fileName);
-            client.putObject(ALIYUN_BUCKETNAME, getPath(ALIYUN_PREFIX), inputStream, objectMetadata);
+            objectMetadata.setContentType(getContentType(substring));
+            client.putObject(ALIYUN_BUCKETNAME, path, inputStream, objectMetadata);
         } catch (Exception e) {
             throw new RuntimeException("上传文件失败，请检查配置信息", e);
         }
 
-        return ALIYUN_DOMAIN + SLASH + getPath(ALIYUN_PREFIX);
+        return ALIYUN_DOMAIN + SLASH + path;
     }
 
     @Override

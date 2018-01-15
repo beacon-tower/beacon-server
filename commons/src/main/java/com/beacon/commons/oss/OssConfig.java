@@ -31,7 +31,7 @@ public class OssConfig {
      * ================= 阿里配置 =================
      **/
     //阿里云绑定的域名
-    public static final String ALIYUN_DOMAIN = "sofly-pic.oss-cn-beijing.aliyuncs.com";
+    public static final String ALIYUN_DOMAIN = "http://sofly-pic.oss-cn-beijing.aliyuncs.com";
     //阿里云路径前缀
     public static final String ALIYUN_PREFIX = "beacon";
     //阿里云EndPoint

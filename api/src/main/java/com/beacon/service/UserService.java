@@ -18,6 +18,7 @@ import com.beacon.utils.ShiroUtils;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -180,6 +181,7 @@ public class UserService extends BaseService<User, Integer> {
             AssertUtils.isNull(EMAIL_EXIST, user);
         }
         BeanUtils.copyPropertiesIgnoreNull(userInfoDto, currentUser, "id");
+        currentUser.setUpdateTime(new Date());
         super.update(currentUser);
     }
 }
