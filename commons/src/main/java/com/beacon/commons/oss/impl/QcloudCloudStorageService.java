@@ -8,6 +8,7 @@ import com.qcloud.cos.request.UploadFileRequest;
 import com.qcloud.cos.sign.Credentials;
 import net.sf.json.JSONObject;
 import org.apache.commons.io.IOUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +62,11 @@ public class QcloudCloudStorageService extends AbstractCloudStorage {
         } catch (IOException e) {
             throw new RuntimeException("上传文件失败", e);
         }
+    }
+
+    @Override
+    public String upload(MultipartFile file) {
+        return null;
     }
 
     @Override

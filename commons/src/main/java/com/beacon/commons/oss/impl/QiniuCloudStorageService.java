@@ -7,6 +7,7 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import org.apache.commons.io.IOUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +53,11 @@ public class QiniuCloudStorageService extends AbstractCloudStorage {
         } catch (IOException e) {
             throw new RuntimeException("上传文件失败", e);
         }
+    }
+
+    @Override
+    public String upload(MultipartFile file) {
+        return null;
     }
 
     @Override

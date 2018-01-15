@@ -2,6 +2,7 @@ package com.beacon.commons.oss;
 
 import com.beacon.commons.utils.DateUtils;
 import com.beacon.commons.utils.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -57,6 +58,14 @@ public abstract class AbstractCloudStorage {
      * @return 返回http地址
      */
     public abstract String upload(InputStream inputStream, String path);
+
+    /**
+     * 文件上传
+     *
+     * @param file 图片文件
+     * @return 返回http地址
+     */
+    public abstract String upload(MultipartFile file);
 
     /**
      * 文件上传
