@@ -84,6 +84,10 @@ public abstract class BaseService<T extends BaseEntity, ID extends Serializable>
         return getBaseDao().saveAndFlush(entity);
     }
 
+    public Iterable<T> update(Iterable<T> entitys) {
+        return getBaseDao().saveAndFlush(entitys);
+    }
+
     public void delete(ID id) {
         getBaseDao().delete(id);
     }

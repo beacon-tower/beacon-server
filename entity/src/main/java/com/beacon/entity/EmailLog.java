@@ -26,7 +26,7 @@ public class EmailLog extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
 
     @ApiModelProperty(notes = "业务类型", allowableValues = "bind")
     @Column(nullable = false, length = 32)

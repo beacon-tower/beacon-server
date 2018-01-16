@@ -47,7 +47,7 @@ public class User extends BaseEntity {
     @ApiModelProperty(notes = "头像id")
     @OneToOne
     @JoinColumn(name = "avatar_img_id")
-    private Image avatarImage;
+    private Image avatarImg;
 
     @ApiModelProperty(notes = "用户性别")
     @Column(length = 4)

@@ -26,7 +26,7 @@ public class SmsLog extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
 
     @ApiModelProperty(notes = "接收手机号")
     @Column(nullable = false, length = 20)
