@@ -18,5 +18,4 @@ public abstract class TopicMapper {
     public abstract Topic fromDto(TopicInputDto topicInputDto);
 
     public abstract TopicOutputDto toDto(Topic topic);
-
 }

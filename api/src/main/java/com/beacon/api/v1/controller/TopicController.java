@@ -2,6 +2,7 @@ package com.beacon.api.v1.controller;
 
 import com.beacon.commons.response.ResData;
 import com.beacon.pojo.TopicInputDto;
+import com.beacon.pojo.TopicOutputDto;
 import com.beacon.service.TopicService;
 import com.beacon.utils.ShiroUtils;
 import io.swagger.annotations.*;
@@ -39,8 +40,19 @@ public class TopicController {
     @GetMapping("name/list")
     public ResData<List<String>> nameList(@RequestParam(defaultValue = "12") Integer limit) {
         Integer userId = ShiroUtils.getUserId();
-        List<String> topicNameList = topicService.findListByUserId(userId, limit);
+        List<String> topicNameList = topicService.findNameListByUserId(userId, limit);
         return ResData.success(topicNameList);
+    }
+
+    @ApiOperation(value = "话题列表", notes = "选择更多话题", response = TopicOutputDto.class, responseContainer = "List")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "limit", value = "显示多少条", paramType = "form", dataType = "int"),
+    })
+    @GetMapping("list")
+    public ResData<List<TopicOutputDto>> list(@RequestParam(required = false) Integer limit) {
+        Integer userId = ShiroUtils.getUserId();
+        List<TopicOutputDto> topicList = topicService.findListByUserId(userId, limit);
+        return ResData.success(topicList);
     }
 }
 

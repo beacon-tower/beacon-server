@@ -1,6 +1,5 @@
 package com.beacon.pojo;
 
-import com.beacon.entity.Image;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,7 +19,7 @@ public class TopicOutputDto {
     private String name;
 
     @ApiModelProperty(notes = "图标")
-    private Image iconImg;
+    private String iconImg;
 
     @ApiModelProperty(notes = "描述")
     private String description;
@@ -30,6 +29,9 @@ public class TopicOutputDto {
 
     @ApiModelProperty(notes = "文章数")
     private int articleNum;
+
+    @ApiModelProperty(notes = "是否关注")
+    private boolean followStatus;
 
     public Integer getId() {
         return id;
@@ -47,11 +49,11 @@ public class TopicOutputDto {
         this.name = name;
     }
 
-    public Image getIconImg() {
+    public String getIconImg() {
         return iconImg;
     }
 
-    public void setIconImg(Image iconImg) {
+    public void setIconImg(String iconImg) {
         this.iconImg = iconImg;
     }
 
@@ -77,5 +79,13 @@ public class TopicOutputDto {
 
     public void setArticleNum(int articleNum) {
         this.articleNum = articleNum;
+    }
+
+    public boolean isFollowStatus() {
+        return followStatus;
+    }
+
+    public void setFollowStatus(boolean followStatus) {
+        this.followStatus = followStatus;
     }
 }
