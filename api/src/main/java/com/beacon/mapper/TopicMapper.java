@@ -2,7 +2,6 @@ package com.beacon.mapper;
 
 import com.beacon.entity.Topic;
 import com.beacon.pojo.TopicInputDto;
-import com.beacon.pojo.TopicOutputDto;
 import org.mapstruct.Mapper;
 
 /**
@@ -17,5 +16,4 @@ public abstract class TopicMapper {
 
     public abstract Topic fromDto(TopicInputDto topicInputDto);
 
-    public abstract TopicOutputDto toDto(Topic topic);
 }

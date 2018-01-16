@@ -2,7 +2,6 @@ package com.beacon.dao;
 
 import com.beacon.commons.base.BaseDao;
 import com.beacon.entity.Topic;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +26,6 @@ public interface TopicDao extends BaseDao<Topic, Integer> {
             "ORDER BY t.follow_num DESC LIMIT 0, ?2", nativeQuery = true)
     List<String> findNameListByUserId(Integer userId, Integer top);
 
-    @Query(value = "SELECT t.* FROM Topic t ORDER BY t.followNum DESC limit 0, ?1")
+    @Query(value = "SELECT t.* FROM topic t ORDER BY t.follow_num DESC limit 0, ?1", nativeQuery = true)
     List<Topic> findAllOrderByFollowNum(Integer top);
 }
