@@ -1,5 +1,6 @@
 package com.beacon.api.v1.controller;
 
+import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.entity.Image;
@@ -27,7 +28,7 @@ import static com.beacon.commons.code.PublicResCode.PARAMS_EXCEPTION;
 @RestController
 @RequestMapping("api/v1/image")
 @Api(value = "api/v1/image", tags = "图片上传")
-public class ImageController {
+public class ImageController extends BaseController {
 
     @Inject
     private OssService ossService;

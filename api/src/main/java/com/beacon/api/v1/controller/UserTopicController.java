@@ -1,5 +1,6 @@
 package com.beacon.api.v1.controller;
 
+import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.entity.Topic;
@@ -25,7 +26,7 @@ import static com.beacon.commons.code.PublicResCode.PARAMS_EXCEPTION;
 @RestController
 @RequestMapping("api/v1/user/topic")
 @Api(value = "api/v1/user/topic", tags = "用户话题")
-public class UserTopicController {
+public class UserTopicController extends BaseController {
 
     @Inject
     private UserTopicService userTopicService;

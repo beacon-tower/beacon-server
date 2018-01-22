@@ -1,5 +1,6 @@
 package com.beacon.api.v1.controller;
 
+import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.commons.utils.StringUtils;
@@ -25,7 +26,7 @@ import javax.inject.Inject;
 @RestController
 @RequestMapping("api/v1/user/info")
 @Api(value = "api/v1/user/info", tags = "用户信息管理")
-public class UserInfoController {
+public class UserInfoController extends BaseController {
 
     @Inject
     private UserService userService;
@@ -53,5 +54,4 @@ public class UserInfoController {
         userService.editInfo(userInfoDto);
         return ResData.success();
     }
-
 }

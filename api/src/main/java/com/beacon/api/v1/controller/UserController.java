@@ -1,5 +1,6 @@
 package com.beacon.api.v1.controller;
 
+import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.entity.User;
@@ -29,7 +30,7 @@ import static com.beacon.enums.code.UserResCode.MOBILE_EXIST;
 @RestController
 @RequestMapping("api/v1/user")
 @Api(value = "api/v1/user", tags = "用户管理")
-public class UserController {
+public class UserController extends BaseController {
 
     @Inject
     private UserService userService;
@@ -75,8 +76,8 @@ public class UserController {
     })
     @PostMapping("register/third/step")
     public ResData<String> registerThirdStep(@RequestParam String mobile,
-                                    @RequestParam String nickname,
-                                    @RequestParam String secret) {
+                                             @RequestParam String nickname,
+                                             @RequestParam String secret) {
         AssertUtils.isMobile(UserResCode.MOBILE_FORMAT_ERROR, mobile);
 
         return userService.registerThirdStep(mobile, nickname, secret);
@@ -89,7 +90,7 @@ public class UserController {
     })
     @PostMapping("login")
     public ResData<String> login(@RequestParam String username,
-                         @RequestParam String secret) {
+                                 @RequestParam String secret) {
         return userService.login(username, secret);
     }
 

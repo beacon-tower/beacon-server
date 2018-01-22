@@ -8,7 +8,6 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 程序入口类
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @EnableScheduling
 @EnableAsync
-@EnableTransactionManagement
 @SpringBootApplication
 @ServletComponentScan(value = "com.beacon")
 public class Application extends SpringBootServletInitializer {

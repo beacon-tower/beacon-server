@@ -1,5 +1,6 @@
 package com.beacon.api.v1.controller;
 
+import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.enums.code.UserResCode;
@@ -25,7 +26,7 @@ import javax.inject.Inject;
 @RestController
 @RequestMapping("api/v1/sms")
 @Api(value = "api/v1/sms", tags = "发送短信")
-public class SmsController {
+public class SmsController extends BaseController {
 
     @Inject
     private SmsService smsService;

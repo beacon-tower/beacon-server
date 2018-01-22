@@ -1,5 +1,6 @@
 package com.beacon.api.v1.controller;
 
+import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
 import com.beacon.pojo.TopicInputDto;
 import com.beacon.pojo.TopicOutputDto;
@@ -21,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/topic")
 @Api(value = "api/v1/topic", tags = "话题")
-public class TopicController {
+public class TopicController extends BaseController {
 
     @Inject
     private TopicService topicService;
