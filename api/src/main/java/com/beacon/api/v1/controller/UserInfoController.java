@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 
 /**
- * 用户信息管理
+ * 用户信息
  *
  * @author luckyhua
  * @version 1.0
@@ -25,7 +25,7 @@ import javax.inject.Inject;
  */
 @RestController
 @RequestMapping("api/v1/user/info")
-@Api(value = "api/v1/user/info", tags = "用户信息管理")
+@Api(value = "api/v1/user/info", tags = "用户基本信息")
 public class UserInfoController extends BaseController {
 
     @Inject
@@ -41,7 +41,7 @@ public class UserInfoController extends BaseController {
         return ResData.success(userInfoDto);
     }
 
-    @ApiOperation(value = "用户信息编辑")
+    @ApiOperation(value = "用户基本信息编辑")
     @PutMapping()
     public ResData edit(@ApiParam(name = "userInfoDto", value = "用户信息dto")
                         @RequestBody UserInfoDto userInfoDto) {

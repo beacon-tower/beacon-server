@@ -131,7 +131,7 @@ public class UserService extends BaseService<User, Integer> {
             user = new User();
             user.setMobile(mobile);
             user.setNickname(nickname);
-            user.setPurseAddress(address);
+            user.setWalletAddress(address);
             super.save(user);
             //清空缓存数据
             redisHelper.remove(REGISTER_MOBILE + mobile);
@@ -157,7 +157,7 @@ public class UserService extends BaseService<User, Integer> {
             Map<String, Object> parseMap = aschResult.parseMap();
             String account = parseMap.get("account").toString();
             String address = (String) JSONObject.parseObject(account).get("address");
-            AssertUtils.isTrue(ADDRESS_ERROR, user.getPurseAddress().equals(address));
+            AssertUtils.isTrue(ADDRESS_ERROR, user.getWalletAddress().equals(address));
             //创建token
             String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
             return ResData.success(token);

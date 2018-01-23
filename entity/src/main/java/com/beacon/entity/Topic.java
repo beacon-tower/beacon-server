@@ -40,10 +40,10 @@ public class Topic extends BaseEntity {
     private String description;
 
     @ApiModelProperty(notes = "关注数")
-    private int followNum;
+    private int followCount;
 
     @ApiModelProperty(notes = "文章数")
-    private int postsNum;
+    private int postsCount;
 
     @ApiModelProperty(notes = "创建时间")
     @Column(nullable = false)

@@ -9,18 +9,18 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 
 /**
- * 用户关注的话题
+ * 用户点赞
  *
  * @author luckyhua
  * @version 1.0
- * @since 2018/1/16
+ * @since 2018/1/23
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "user_topic")
-@ApiModel(value = "UserTopic", description = "用户关注的话题表")
-public class UserTopic extends BaseEntity {
+@Table(name = "user_like")
+@ApiModel(value = "UserLike", description = "用户点赞")
+public class UserLike extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +31,10 @@ public class UserTopic extends BaseEntity {
     @Column(name = "user_id")
     private Integer userId;
 
-    @ApiModelProperty(notes = "话题id")
-    @Column(name = "topic_id")
-    private Integer topicId;
+    @ApiModelProperty(notes = "目标类型,posts:文章 comment:评论", allowableValues = "posts,comment")
+    private String targetType;
 
-    @ApiModelProperty(notes = "用户话题排序号")
-    private int seq;
+    @ApiModelProperty(notes = "目标值，文章id/评论id")
+    private Integer targetValue;
+
 }

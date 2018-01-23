@@ -30,7 +30,7 @@ public class User extends BaseEntity {
 
     @ApiModelProperty(notes = "钱包地址")
     @Column(nullable = false, length = 64)
-    private String purseAddress;
+    private String walletAddress;
 
     @ApiModelProperty(notes = "手机号")
     @Column(length = 11)
@@ -58,6 +58,9 @@ public class User extends BaseEntity {
 
     @ApiModelProperty(notes = "个人简介")
     private String introduce;
+
+    @ApiModelProperty(notes = "被关注数")
+    private int followCount;
 
     @ApiModelProperty(notes = "创建时间")
     @Column(nullable = false)

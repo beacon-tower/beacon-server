@@ -2,6 +2,7 @@ package com.beacon.api.v1.controller;
 
 import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
+import com.beacon.pojo.TopicDtoList;
 import com.beacon.pojo.TopicInputDto;
 import com.beacon.pojo.TopicOutputDto;
 import com.beacon.service.TopicService;
@@ -34,25 +35,23 @@ public class TopicController extends BaseController {
         return ResData.success();
     }
 
-    @ApiOperation(value = "话题名列表", notes = "排序用户是否关注、话题被关注数", response = String.class, responseContainer = "List")
+    @ApiOperation(value = "话题名列表", notes = "排序用户是否关注、话题被关注数", response = TopicDtoList.class, responseContainer = "List")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "limit", value = "显示多少条", defaultValue = "12", paramType = "form", dataType = "int"),
-    })
-    @GetMapping("name/list")
-    public ResData<List<String>> nameList(@RequestParam(defaultValue = "12") Integer limit) {
-        Integer userId = ShiroUtils.getUserId();
-        List<String> topicNameList = topicService.findNameListByUserId(userId, limit);
-        return ResData.success(topicNameList);
-    }
-
-    @ApiOperation(value = "话题列表", notes = "选择更多话题", response = TopicOutputDto.class, responseContainer = "List")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "limit", value = "显示多少条", paramType = "form", dataType = "int"),
+            @ApiImplicitParam(name = "limit", value = "显示多少条,默认显示所有", paramType = "query", dataType = "int"),
     })
     @GetMapping("list")
-    public ResData<List<TopicOutputDto>> list(@RequestParam(required = false) Integer limit) {
-        Integer userId = ShiroUtils.getUserId();
-        List<TopicOutputDto> topicList = topicService.findListByUserId(userId, limit);
+    public ResData<List<TopicDtoList>> list(@RequestParam(required = false, name = "limit") Integer top) {
+        List<TopicDtoList> topicsDtoList = topicService.findList(ShiroUtils.getUserId(), top);
+        return ResData.success(topicsDtoList);
+    }
+
+    @ApiOperation(value = "话题列表", notes = "选择更多话题,显示更全的话题信息", response = TopicOutputDto.class, responseContainer = "List")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "limit", value = "显示多少条,默认显示所有", paramType = "query", dataType = "int"),
+    })
+    @GetMapping("more/list")
+    public ResData<List<TopicOutputDto>> moreList(@RequestParam(required = false, name = "limit") Integer top) {
+        List<TopicOutputDto> topicList = topicService.findMoreList(ShiroUtils.getUserId(), top);
         return ResData.success(topicList);
     }
 }

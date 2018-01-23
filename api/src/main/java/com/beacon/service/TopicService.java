@@ -7,6 +7,7 @@ import com.beacon.dao.UserTopicDao;
 import com.beacon.entity.Topic;
 import com.beacon.entity.UserTopic;
 import com.beacon.mapper.TopicMapper;
+import com.beacon.pojo.TopicDtoList;
 import com.beacon.pojo.TopicInputDto;
 import com.beacon.pojo.TopicOutputDto;
 import com.beacon.utils.BeanUtils;
@@ -40,11 +41,23 @@ public class TopicService extends BaseService<Topic, Integer> {
         return this.topicDao;
     }
 
-    public List<String> findNameListByUserId(Integer userId, Integer top) {
-        return topicDao.findNameListByUserId(userId, top);
+    public List<TopicDtoList> findList(Integer userId, Integer top) {
+        if (top == null) {
+            top = Integer.MAX_VALUE;
+        }
+        List<Object[]> list = topicDao.findListByUserId(userId, top);
+        List<TopicDtoList> topicsDtoList = Lists.newArrayList(list.size());
+        for (Object[] obj : list) {
+            TopicDtoList topicDtoList = new TopicDtoList();
+            topicDtoList.setId((Integer) obj[0]);
+            topicDtoList.setName((String) obj[1]);
+            topicDtoList.setSeq((Integer) obj[2]);
+            topicsDtoList.add(topicDtoList);
+        }
+        return topicsDtoList;
     }
 
-    public List<TopicOutputDto> findListByUserId(Integer userId, Integer top) {
+    public List<TopicOutputDto> findMoreList(Integer userId, Integer top) {
         if (top == null) {
             top = Integer.MAX_VALUE;
         }
@@ -57,7 +70,7 @@ public class TopicService extends BaseService<Topic, Integer> {
             if (topic.getIconImg() != null) {
                 topicOutputDto.setIconImg(topic.getIconImg().getUrl());
             }
-            topicOutputDto.setFollowStatus(userTopic != null);
+            topicOutputDto.setFollowed(userTopic != null);
             topicOutputDtoList.add(topicOutputDto);
         });
         return topicOutputDtoList;
