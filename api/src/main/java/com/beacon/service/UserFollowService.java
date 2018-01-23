@@ -55,4 +55,14 @@ public class UserFollowService extends BaseService<UserFollow, Integer> {
         }
         userService.update(followUser);
     }
+
+    /**
+     * 用户是否关注过作者
+     *
+     * @param authorUserId 作者id
+     * @return 是否关注
+     */
+    public boolean hasFollowedAuthor(Integer authorUserId) {
+        return userFollowDao.countByUserIdAndFollowUserId(ShiroUtils.getUserId(), authorUserId) > 0;
+    }
 }

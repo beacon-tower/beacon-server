@@ -33,7 +33,7 @@ public class UserTopicService extends BaseService<UserTopic, Integer> {
 
     public void toggleFollow(Integer userId, Topic topic) {
         UserTopic userTopic = userTopicDao.findByUserIdAndTopicId(userId, topic.getId());
-        int followNum = topic.getFollowNum();
+        int followNum = topic.getFollowCount();
         //取消话题关注
         if (userTopic != null) {
             super.delete(userTopic);
@@ -45,7 +45,7 @@ public class UserTopicService extends BaseService<UserTopic, Integer> {
             super.save(userTopic);
             followNum = followNum + 1;
         }
-        topic.setFollowNum(followNum);
+        topic.setFollowCount(followNum);
         topic.setUpdateTime(new Date());
         topicService.update(topic);
     }

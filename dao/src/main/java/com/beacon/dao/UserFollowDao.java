@@ -14,4 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserFollowDao extends BaseDao<UserFollow, Integer> {
     UserFollow findByUserIdAndFollowUserId(Integer userId, Integer followUserId);
+
+    int countByUserIdAndFollowUserId(Integer userId, Integer authorUserId);
 }

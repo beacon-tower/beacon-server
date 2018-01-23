@@ -7,6 +7,7 @@ import com.beacon.commons.specification.SpecificationOperator;
 import com.beacon.commons.utils.CollectionUtils;
 import com.beacon.dao.UserLikeDao;
 import com.beacon.entity.UserLike;
+import com.beacon.utils.ShiroUtils;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -33,14 +34,13 @@ public class UserLikeService extends BaseService<UserLike, Integer> {
     /**
      * 用户是否点赞过
      *
-     * @param userId 用户id
      * @param targetType 目标类型
      * @param targetValue 目标值
      * @return 是否点过
      */
-    public boolean hasLike(Integer userId, String targetType, Integer targetValue) {
+    public boolean hasLike(String targetType, Integer targetValue) {
         SimpleSpecificationBuilder<UserLike> spec = new SimpleSpecificationBuilder<>();
-        spec.add("userId", SpecificationOperator.Operator.eq, userId);
+        spec.add("userId", SpecificationOperator.Operator.eq, ShiroUtils.getUserId());
         spec.add("targetType", SpecificationOperator.Operator.eq, targetType);
         spec.add("targetValue", SpecificationOperator.Operator.eq, targetValue);
         List<UserLike> userLikeList = super.findAll(spec.generateSpecification());

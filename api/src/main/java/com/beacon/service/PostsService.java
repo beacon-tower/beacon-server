@@ -13,6 +13,7 @@ import com.beacon.pojo.*;
 import com.beacon.utils.BeanUtils;
 import com.beacon.utils.ShiroUtils;
 import com.beacon.utils.WordsUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -53,6 +54,9 @@ public class PostsService extends BaseService<Posts, Integer> {
 
     @Inject
     private UserFavoriteService userFavoriteService;
+
+    @Inject
+    private UserFollowService userFollowService;
 
     @Override
     public BaseDao<Posts, Integer> getBaseDao() {
@@ -201,7 +205,7 @@ public class PostsService extends BaseService<Posts, Integer> {
         comment.setParentId(commentInputDto.getParentId());
         comment.setContent(commentInputDto.getContent());
         if (commentInputDto.getParentId() == null) {
-            comment.setFloor(comment.getFloor());
+            comment.setFloor(commentService.getMaxFloor(postsId));
         } else {
             //更新父评论的子评论数
             Comment commentParent = commentService.findById(comment.getParentId());
@@ -211,7 +215,7 @@ public class PostsService extends BaseService<Posts, Integer> {
         commentService.save(comment);
 
         if (commentInputDto.getParentId() == null) {
-            return commentMapper.toParentOutDto(comment);
+            return commentService.toParentOutDto(comment);
         } else {
             return commentMapper.toOutDto(comment);
         }
@@ -223,7 +227,7 @@ public class PostsService extends BaseService<Posts, Integer> {
      */
     public void like(Integer postsId) {
         Integer userId = ShiroUtils.getUserId();
-        boolean hasLike = userLikeService.hasLike(userId, String.valueOf(UserLikeDict.TARGET_TYPE_POSTS), postsId);
+        boolean hasLike = userLikeService.hasLike(String.valueOf(UserLikeDict.TARGET_TYPE_POSTS), postsId);
         AssertUtils.isTrue(POSTS_REPEAT_LIKED, !hasLike);
 
         Posts posts = this.findPublishedPostsById(postsId);
@@ -269,6 +273,23 @@ public class PostsService extends BaseService<Posts, Integer> {
         Posts posts = this.findPublishedPostsById(postsId);
         AssertUtils.notNull(POSTS_ID_ERROR, posts);
 
-        return postsMapper.toDetailDto(posts);
+        PostsDetailDto postsDetailDto = postsMapper.toDetailDto(posts);
+        postsDetailDto.setFollowed(userFollowService.hasFollowedAuthor(posts.getUser().getId()));
+        return postsDetailDto;
+    }
+
+    /**
+     * 评论列表
+     *
+     * @param postsId 文章id
+     * @param pageNumber 页码
+     * @param pageSize 每页多少条
+     * @return 分页列表
+     */
+    public Page<CommentParentOutDto> commentList(Integer postsId, Integer pageNumber, Integer pageSize) {
+        Posts posts = this.findPublishedPostsById(postsId);
+        AssertUtils.notNull(POSTS_ID_ERROR, posts);
+
+        return commentService.commentList(postsId, pageNumber, pageSize);
     }
 }

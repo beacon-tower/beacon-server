@@ -2,7 +2,10 @@ package com.beacon.mapper;
 
 import com.beacon.entity.User;
 import com.beacon.pojo.UserInfoDto;
+import com.beacon.pojo.UserShowDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 /**
  * 用户dto转换
@@ -18,4 +21,8 @@ public abstract class UserMapper {
 
     public abstract UserInfoDto toInfoDto(User user);
 
+    @Mappings({
+            @Mapping(source = "avatarImg.url", target = "avatarUrl"),
+    })
+    public abstract UserShowDto toShowDto(User user);
 }

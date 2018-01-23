@@ -9,6 +9,7 @@ import com.beacon.pojo.CommentParentOutDto;
 import com.beacon.service.PostsService;
 import com.beacon.service.UserFollowService;
 import io.swagger.annotations.*;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -42,7 +43,7 @@ public class PostsController extends BaseController {
 
     @ApiOperation(value = "关注文章作者", notes = "文章详情页面，关注文章作者", response = ResData.class)
     @PostMapping("/toggle_follow_author/{id}")
-    public ResData toggleFollowAuthor(@ApiParam(name = "id", value = "作者id") @PathVariable Integer followUserId) {
+    public synchronized ResData toggleFollowAuthor(@ApiParam(name = "id", value = "作者id") @PathVariable Integer followUserId) {
         userFollowService.toggleFollowAuthor(followUserId);
         return ResData.success();
     }
@@ -73,17 +74,18 @@ public class PostsController extends BaseController {
         return ResData.success(commentOutDto);
     }
 
-    @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论列表", response = ResData.class)
+    @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论列表", response = CommentParentOutDto.class, responseContainer = "list")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNumber", value = "页码", paramType = "query", dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "每页多少条", paramType = "query", dataType = "int"),
     })
     @GetMapping("{id}/comments")
-    public ResData comments(@ApiParam(name = "id", value = "文章id") @PathVariable Integer postsId,
-                            @RequestParam(defaultValue = "0") Integer pageNumber,
-                            @RequestParam(defaultValue = "10") Integer pageSize) {
-//        postsService.comments(postsId);
-        return ResData.success();
+    public ResData<Page<CommentParentOutDto>> commentList(@ApiParam(name = "id", value = "文章id") @PathVariable Integer postsId,
+                                                          @RequestParam(defaultValue = "0") Integer pageNumber,
+                                                          @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        Page<CommentParentOutDto> commentParentOutDtoPage = postsService.commentList(postsId, pageNumber, pageSize);
+        return ResData.success(commentParentOutDtoPage);
     }
 
 }
