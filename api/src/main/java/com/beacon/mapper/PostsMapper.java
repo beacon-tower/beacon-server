@@ -2,13 +2,14 @@ package com.beacon.mapper;
 
 import com.beacon.entity.Posts;
 import com.beacon.entity.User;
-import com.beacon.pojo.PostsDetailDto;
-import com.beacon.pojo.PostsInputDto;
-import com.beacon.pojo.PostsOutDto;
-import com.beacon.pojo.UserShowDto;
+import com.beacon.pojo.*;
+import com.beacon.utils.RelativeDateUtils;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +33,19 @@ public abstract class PostsMapper {
 
     public abstract PostsDetailDto toDetailDto(Posts posts);
 
+    @Mappings({
+            @Mapping(source = "content", target = "shortContent"),
+            @Mapping(source = "createTime", target = "formatTime")
+    })
+    public abstract PostsFavoriteDto toFavoriteDto(Posts posts);
+
+    public abstract List<PostsFavoriteDto> toFavoriteDtoList(List<Posts> postsList);
+
     public UserShowDto toUserShowDto(User user) {
         return userMapper.toShowDto(user);
+    }
+
+    public String toFormatTime(Date createTime) {
+        return RelativeDateUtils.format(createTime);
     }
 }

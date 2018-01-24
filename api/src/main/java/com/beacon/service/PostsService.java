@@ -272,6 +272,8 @@ public class PostsService extends BaseService<Posts, Integer> {
     public PostsDetailDto detail(Integer postsId) {
         Posts posts = this.findPublishedPostsById(postsId);
         AssertUtils.notNull(POSTS_ID_ERROR, posts);
+        posts.setReadCount(posts.getReadCount() + 1);
+        super.update(posts);
 
         PostsDetailDto postsDetailDto = postsMapper.toDetailDto(posts);
         postsDetailDto.setFollowed(userFollowService.hasFollowedAuthor(posts.getUser().getId()));
