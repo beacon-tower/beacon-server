@@ -20,7 +20,7 @@ public class SmsUtils {
 
     private static YunpianClient client;
 
-    private static final String API_KEY = "54c5d2632b29d981fcaafc4286dac7ed";
+    private static final String API_KEY = "8c247cb4b69255c4c2233f4f575f4295";
 
     static {
         client = (new YunpianClient(API_KEY)).init();

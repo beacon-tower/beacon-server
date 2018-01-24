@@ -5,8 +5,10 @@ import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.entity.User;
 import com.beacon.enums.code.UserResCode;
+import com.beacon.enums.dict.SmsLogDict;
 import com.beacon.global.session.TokenManager;
 import com.beacon.global.session.TokenModel;
+import com.beacon.service.SmsService;
 import com.beacon.service.UserService;
 import com.beacon.utils.ShiroUtils;
 import io.swagger.annotations.Api;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.util.Map;
 
+import static com.beacon.enums.code.UserResCode.CODE_ERROR;
 import static com.beacon.enums.code.UserResCode.MOBILE_EXIST;
 
 /**
@@ -38,6 +41,9 @@ public class UserController extends BaseController {
     @Inject
     private TokenManager tokenManager;
 
+    @Inject
+    private SmsService smsService;
+
     @ApiOperation(value = "用户注册", notes = "第一步，输入手机号，验证码", response = ResData.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
@@ -47,12 +53,13 @@ public class UserController extends BaseController {
     public ResData registerFirstStep(@RequestParam String mobile,
                                      @RequestParam String code) {
         AssertUtils.isMobile(UserResCode.MOBILE_FORMAT_ERROR, mobile);
-        AssertUtils.length(UserResCode.CODE_ERROR, 6, code);
+        AssertUtils.length(CODE_ERROR, 6, code);
 
         //校验手机号
         User user = userService.findByMobile(mobile);
         AssertUtils.isNull(MOBILE_EXIST, user);
-        //TODO 校验手机验证码
+        // 校验手机验证码
+        AssertUtils.isTrue(CODE_ERROR, smsService.checkMobileCode(mobile, code, SmsLogDict.TYPE_REGISTER));
 
         return ResData.build(userService.registerFirstStep(mobile));
     }

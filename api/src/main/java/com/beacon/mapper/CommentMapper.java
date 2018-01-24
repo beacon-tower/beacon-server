@@ -8,6 +8,7 @@ import com.beacon.pojo.UserShowDto;
 import org.mapstruct.Mapper;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,21 @@ public abstract class CommentMapper {
 
     public abstract CommentOutDto toOutDto(Comment comment);
 
-    public abstract List<CommentOutDto> toOutDtoList(List<Comment> commentList);
+    public List<CommentOutDto> toOutDtoList(List<Comment> commentList) {
+        if ( commentList == null ) {
+
+            return null;
+        }
+
+        List<CommentOutDto> list = new ArrayList<>(commentList.size());
+
+        for ( Comment comment : commentList ) {
+
+            list.add( toOutDto( comment ) );
+        }
+
+        return list;
+    }
 
     public abstract CommentParentOutDto toParentOutDto(Comment comment);
 

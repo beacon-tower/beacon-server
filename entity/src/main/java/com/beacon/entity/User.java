@@ -62,6 +62,9 @@ public class User extends BaseEntity {
     @ApiModelProperty(notes = "被关注数")
     private int followCount;
 
+    @ApiModelProperty(notes = "文章字数")
+    private int wordsCount;
+
     @ApiModelProperty(notes = "创建时间")
     @Column(nullable = false)
     private Date createTime = new Date();

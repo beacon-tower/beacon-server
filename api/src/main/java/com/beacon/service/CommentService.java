@@ -120,6 +120,6 @@ public class CommentService extends BaseService<Comment, Integer> {
         Pageable pageable = new PageRequest(pageNumber, pageSize, new Sort(Sort.Direction.DESC, "id"));
         Page<Comment> commentPage = super.findAll(spec.generateSpecification(), pageable);
         List<CommentParentOutDto> commentParentOutDtoList = this.toParentOutDtoList(commentPage.getContent());
-        return new PageImpl<>(commentParentOutDtoList, pageable, commentPage.getTotalElements());
+        return commentPage.hasContent() ? new PageImpl<>(commentParentOutDtoList, pageable, commentPage.getTotalElements()) : null;
     }
 }

@@ -6,10 +6,11 @@ import com.beacon.commons.utils.AssertUtils;
 import com.beacon.pojo.CommentInputDto;
 import com.beacon.pojo.CommentOutDto;
 import com.beacon.pojo.CommentParentOutDto;
+import com.beacon.pojo.PageResult;
 import com.beacon.service.PostsService;
 import com.beacon.service.UserFollowService;
+import com.beacon.utils.PageUtils;
 import io.swagger.annotations.*;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -36,35 +37,40 @@ public class PostsController extends BaseController {
 
     @ApiOperation(value = "文章详情", notes = "文章详情页面内容", response = ResData.class)
     @PostMapping("{id}")
-    public ResData detail(@ApiParam(name = "id", value = "文章id") @PathVariable Integer postsId) {
+    public ResData detail(@ApiParam(name = "id", value = "文章id")
+                          @PathVariable("id") Integer postsId) {
         postsService.detail(postsId);
         return ResData.success();
     }
 
     @ApiOperation(value = "关注文章作者", notes = "文章详情页面，关注文章作者", response = ResData.class)
     @PostMapping("/toggle_follow_author/{id}")
-    public synchronized ResData toggleFollowAuthor(@ApiParam(name = "id", value = "作者id") @PathVariable Integer followUserId) {
+    public synchronized ResData toggleFollowAuthor(@ApiParam(name = "id", value = "作者id")
+                                                   @PathVariable("id") Integer followUserId) {
         userFollowService.toggleFollowAuthor(followUserId);
         return ResData.success();
     }
 
     @ApiOperation(value = "收藏文章", notes = "文章详情页面，对文章收藏", response = ResData.class)
     @PostMapping("{id}/favorite")
-    public synchronized ResData addFavorite(@ApiParam(name = "id", value = "文章id") @PathVariable Integer postsId) {
+    public synchronized ResData addFavorite(@ApiParam(name = "id", value = "文章id")
+                                            @PathVariable("id") Integer postsId) {
         postsService.addFavorite(postsId);
         return ResData.success();
     }
 
     @ApiOperation(value = "点赞文章", notes = "文章详情页面，对文章点赞", response = ResData.class)
     @PostMapping("{id}/like")
-    public synchronized ResData like(@ApiParam(name = "id", value = "文章id") @PathVariable Integer postsId) {
+    public synchronized ResData like(@ApiParam(name = "id", value = "文章id")
+                                     @PathVariable("id") Integer postsId) {
         postsService.like(postsId);
         return ResData.success();
     }
 
     @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论", response = CommentParentOutDto.class)
     @PostMapping("{id}/comment")
-    public ResData<CommentOutDto> addComment(@ApiParam(name = "id", value = "文章id") @PathVariable Integer postsId,
+    public ResData<CommentOutDto> addComment(@ApiParam(name = "id", value = "文章id")
+                                             @PathVariable("id") Integer postsId,
                                              @ApiParam(name = "commentInputDto", value = "评论对象")
                                              @RequestBody CommentInputDto commentInputDto) {
         String[] checkFields = new String[]{"comment"};
@@ -74,18 +80,19 @@ public class PostsController extends BaseController {
         return ResData.success(commentOutDto);
     }
 
-    @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论列表", response = CommentParentOutDto.class, responseContainer = "list")
+    @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论列表", response = PageResult.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNumber", value = "页码", paramType = "query", dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "每页多少条", paramType = "query", dataType = "int"),
     })
     @GetMapping("{id}/comments")
-    public ResData<Page<CommentParentOutDto>> commentList(@ApiParam(name = "id", value = "文章id") @PathVariable Integer postsId,
-                                                          @RequestParam(defaultValue = "0") Integer pageNumber,
-                                                          @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResData<PageResult> commentList(@ApiParam(name = "id", value = "文章id")
+                                           @PathVariable("id") Integer postsId,
+                                           @RequestParam(defaultValue = "0") Integer pageNumber,
+                                           @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        Page<CommentParentOutDto> commentParentOutDtoPage = postsService.commentList(postsId, pageNumber, pageSize);
-        return ResData.success(commentParentOutDtoPage);
+        PageResult pageResult = PageUtils.getPageResult(postsService.commentList(postsId, pageNumber, pageSize));
+        return ResData.success(pageResult);
     }
 
 }

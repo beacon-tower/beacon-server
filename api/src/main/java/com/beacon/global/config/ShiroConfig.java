@@ -86,6 +86,9 @@ public class ShiroConfig {
         filterMap.put("/view/**", "anon");
         filterMap.put("/api/v1/user/register/**", "anon");
         filterMap.put("/api/v1/user/login", "anon");
+        filterMap.put("/api/v1/posts/*", "anon");
+        filterMap.put("/api/v1/posts/*/comments", "anon");
+        filterMap.put("/api/v1/sms/code", "anon");
         filterMap.put("/", "anon");
         filterMap.put("/**", "oauth2");
         factoryBean.setFilterChainDefinitionMap(filterMap);
