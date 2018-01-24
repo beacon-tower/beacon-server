@@ -20,6 +20,9 @@ public class PageUtils {
      * 封装分页数据
      */
     public static PageResult getPageResult(Page<?> objPage) {
+        if (objPage == null) {
+            return null;
+        }
         PageResult pageResult = new PageResult();
         pageResult.setResultList(objPage.getContent());
         pageResult.setTotalPages(objPage.getTotalPages());
