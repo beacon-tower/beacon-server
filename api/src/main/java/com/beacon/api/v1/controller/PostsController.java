@@ -94,5 +94,4 @@ public class PostsController extends BaseController {
         PageResult pageResult = PageUtils.getPageResult(postsService.commentList(postsId, pageNumber, pageSize));
         return ResData.success(pageResult);
     }
-
 }
