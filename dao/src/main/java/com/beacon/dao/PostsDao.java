@@ -21,4 +21,8 @@ public interface PostsDao extends BaseDao<Posts, Integer> {
     List<Posts> findList(Integer userId, Integer topicId);
 
     Posts findByIdAndState(Integer id, String state);
+
+
+
+
 }

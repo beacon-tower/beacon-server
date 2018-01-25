@@ -74,6 +74,7 @@ public class ShiroConfig {
         factoryBean.setFilters(filters);
 
         Map<String, String> filterMap = new LinkedHashMap<>();
+        filterMap.put("/api/v1/index/**", "anon");
         filterMap.put("/webjars/**", "anon");
         filterMap.put("/druid/**", "anon");
         filterMap.put("/**/*.css", "anon");
