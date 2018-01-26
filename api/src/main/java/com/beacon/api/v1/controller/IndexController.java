@@ -81,8 +81,7 @@ public class IndexController {
     public ResData<List<TopicOutputDto>> getTopicList(@RequestParam(defaultValue = "10") Integer limit ) {
 
         User user = ShiroUtils.getUser();
-        user = new User();
-        user.setId(1);
+
         if(user != null){
            List<TopicOutputDto> list =  topicService.findMoreList(user.getId(),limit);
             return ResData.success( list );
