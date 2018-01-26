@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.testng.collections.Lists;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -40,6 +42,26 @@ public class TopicService extends BaseService<Topic, Integer> {
     public BaseDao<Topic, Integer> getBaseDao() {
         return this.topicDao;
     }
+
+
+
+    public List<TopicOutputDto> findList(Integer top) {
+        if (top == null) {
+            top = Integer.MAX_VALUE;
+        }
+        List<Topic> list = topicDao.findAllOrderByFollowNum(top);
+        List<TopicOutputDto> outList = new ArrayList<>(list.size());
+        list.forEach(topic -> {
+            TopicOutputDto dto = new TopicOutputDto();
+            dto.setId(topic.getId());
+            dto.setFollowCount(topic.getFollowCount());
+            dto.setName(topic.getName());
+            outList.add(dto);
+        });
+
+        return outList;
+    }
+
 
     public List<TopicDtoList> findList(Integer userId, Integer top) {
         if (top == null) {
@@ -73,6 +95,17 @@ public class TopicService extends BaseService<Topic, Integer> {
             topicOutputDto.setFollowed(userTopic != null);
             topicOutputDtoList.add(topicOutputDto);
         });
+
+        topicOutputDtoList.sort(new Comparator<TopicOutputDto>() {
+            public int compare(TopicOutputDto o1, TopicOutputDto o2) {
+                int r = o2.isFollowed().compareTo(o1.isFollowed());
+                if(r == 0){
+                    return o2.getFollowCount().compareTo(o1.getFollowCount());
+                }
+                return r;
+            }
+        });
+
         return topicOutputDtoList;
     }
 

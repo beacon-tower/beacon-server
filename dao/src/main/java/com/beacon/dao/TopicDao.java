@@ -21,6 +21,6 @@ public interface TopicDao extends BaseDao<Topic, Integer> {
             "ORDER BY ut.seq ASC, t.follow_num DESC LIMIT 0, ?2", nativeQuery = true)
     List<Object[]> findListByUserId(Integer userId, Integer top);
 
-    @Query(value = "SELECT t.* FROM topic t ORDER BY t.follow_num DESC limit 0, ?1", nativeQuery = true)
+    @Query(value = "SELECT t.* FROM topic t ORDER BY t.follow_count DESC limit 0, ?1", nativeQuery = true)
     List<Topic> findAllOrderByFollowNum(Integer top);
 }

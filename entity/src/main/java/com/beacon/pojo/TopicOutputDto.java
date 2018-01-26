@@ -25,13 +25,13 @@ public class TopicOutputDto {
     private String description;
 
     @ApiModelProperty(notes = "关注数")
-    private int followCount;
+    private Integer followCount;
 
     @ApiModelProperty(notes = "文章数")
     private int postsCount;
 
     @ApiModelProperty(notes = "是否关注")
-    private boolean followed;
+    private Boolean followed;
 
     @ApiModelProperty(value = "话题排序号")
     private Integer seq;
@@ -68,11 +68,11 @@ public class TopicOutputDto {
         this.description = description;
     }
 
-    public int getFollowCount() {
+    public Integer getFollowCount() {
         return followCount;
     }
 
-    public void setFollowCount(int followCount) {
+    public void setFollowCount(Integer followCount) {
         this.followCount = followCount;
     }
 
@@ -84,11 +84,11 @@ public class TopicOutputDto {
         this.postsCount = postsCount;
     }
 
-    public boolean isFollowed() {
+    public Boolean isFollowed() {
         return followed;
     }
 
-    public void setFollowed(boolean followed) {
+    public void setFollowed(Boolean followed) {
         this.followed = followed;
     }
 
