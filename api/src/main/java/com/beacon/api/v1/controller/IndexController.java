@@ -7,15 +7,14 @@ import com.beacon.pojo.TopicOutputDto;
 import com.beacon.service.IndexService;
 import com.beacon.service.PostsService;
 import com.beacon.service.TopicService;
+import com.beacon.service.UserService;
 import com.beacon.utils.ShiroUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
-
 import javax.inject.Inject;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -32,6 +31,9 @@ public class IndexController {
 
     @Inject
     private TopicService topicService;
+
+    @Inject
+    private UserService userService;
 
 
     @ApiOperation(value = "默认文章列表", notes = "首页的文章列表")
@@ -83,12 +85,40 @@ public class IndexController {
         User user = ShiroUtils.getUser();
 
         if(user != null){
-           List<TopicOutputDto> list =  topicService.findMoreList(user.getId(),limit);
+            List<TopicOutputDto> list =  topicService.findMoreList(user.getId(),limit);
             return ResData.success( list );
         }
 
         return ResData.success(topicService.findList(limit));
     }
+
+
+
+
+
+    @ApiOperation(value = "推荐作者", notes = "推荐作者")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNumber", value = "页码,默认显示第1页", defaultValue = "1" , paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "limit", value = "显示多少条,默认显示10条", defaultValue = "10" , paramType = "query", dataType = "int")
+    })
+    @GetMapping("author/list")
+    public ResData<List<User>> getAuthorList( @RequestParam(defaultValue = "1") Integer pageNumber,
+                                              @RequestParam(defaultValue = "10") Integer limit) {
+
+        User user = ShiroUtils.getUser();
+
+        if (user == null){
+            return  ResData.success( userService.findUsers(pageNumber,limit) );
+        }
+
+
+        return ResData.success( userService.findUsersNotFollow(user.getId(),pageNumber,limit) );
+    }
+
+
+
+
+
 
 
 }

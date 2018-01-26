@@ -18,10 +18,7 @@ import com.beacon.utils.ShiroUtils;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.beacon.commons.code.PublicResCode.ASCH_CALL_FAIL;
 import static com.beacon.enums.code.UserResCode.*;
@@ -67,6 +64,22 @@ public class UserService extends BaseService<User, Integer> {
     public User findByEmail(String email) {
         return userDao.findByEmail(email);
     }
+
+
+    public List<User> findUsers(Integer pageNumber, Integer limit) {
+
+        return userDao.findUsers(pageNumber*limit-limit,limit);
+
+    }
+
+    public List<User> findUsersNotFollow(Integer userId,Integer pageNumber, Integer limit) {
+
+        return userDao.findUsersNotFollow(userId,pageNumber*limit-limit,limit);
+
+    }
+
+
+
 
     public Set<String> findPermsByUser(User user) {
         return null;
