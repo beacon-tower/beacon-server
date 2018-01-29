@@ -1,11 +1,11 @@
 package com.beacon.api.v1.controller;
 
 import com.beacon.commons.response.ResData;
+import com.beacon.commons.utils.DateUtils;
 import com.beacon.entity.User;
 import com.beacon.pojo.PostsListOutDto;
 import com.beacon.pojo.TopicOutputDto;
 import com.beacon.service.IndexService;
-import com.beacon.service.PostsService;
 import com.beacon.service.TopicService;
 import com.beacon.service.UserService;
 import com.beacon.utils.ShiroUtils;
@@ -15,6 +15,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +36,8 @@ public class IndexController {
 
     @Inject
     private UserService userService;
+
+
 
 
     @ApiOperation(value = "默认文章列表", notes = "首页的文章列表")
@@ -116,6 +120,62 @@ public class IndexController {
     }
 
 
+
+
+    @ApiOperation(value = "今日最火", notes = "今日最火查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNumber", value = "页码,默认显示第1页", defaultValue = "1" , paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "limit", value = "显示多少条,默认显示10条", defaultValue = "10" , paramType = "query", dataType = "int")
+    })
+    @GetMapping("today/hot/list")
+    public ResData<List<PostsListOutDto>> getTodayHotList( @RequestParam(defaultValue = "1") Integer pageNumber,
+                                                           @RequestParam(defaultValue = "10") Integer limit) {
+
+
+        Integer startDate = Integer.parseInt(DateUtils.format(new Date(),"yyyyMMdd"));
+
+        List list = indexService.findPostsByDate(startDate , pageNumber , limit );
+
+        return ResData.success(list);
+
+    }
+
+
+    @ApiOperation(value = "7日最火", notes = "7日最火查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNumber", value = "页码,默认显示第1页", defaultValue = "1" , paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "limit", value = "显示多少条,默认显示10条", defaultValue = "10" , paramType = "query", dataType = "int")
+    })
+    @GetMapping("seven/day/hot/list")
+    public ResData<List<PostsListOutDto>> getSevenDayHotList( @RequestParam(defaultValue = "1") Integer pageNumber,
+                                                              @RequestParam(defaultValue = "10") Integer limit) {
+
+        Date date = DateUtils.add(new Date(), Calendar.DAY_OF_MONTH,-7);
+
+        Integer startDate = Integer.parseInt(DateUtils.format(date,"yyyyMMdd"));
+
+        List list = indexService.findPostsByDate(startDate , pageNumber , limit );
+
+        return ResData.success(list);
+
+    }
+
+
+
+    @ApiOperation(value = "历史最火", notes = "历史最火查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNumber", value = "页码,默认显示第1页", defaultValue = "1" , paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "limit", value = "显示多少条,默认显示10条", defaultValue = "10" , paramType = "query", dataType = "int")
+    })
+    @GetMapping("history/hot/list")
+    public ResData<List<PostsListOutDto>> getHistoryHotList(  @RequestParam(defaultValue = "1") Integer pageNumber,
+                                                              @RequestParam(defaultValue = "10") Integer limit) {
+
+        List list = indexService.findPostsByDate(null , pageNumber , limit );
+
+        return ResData.success(list);
+
+    }
 
 
 

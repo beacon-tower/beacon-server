@@ -72,4 +72,64 @@ public class PostsSqlDao {
 
     }
 
+
+
+
+    /**
+     * 根据文章热度查询分页查询
+     * @param startDate 格式如：20171231
+     * */
+    public List<PostsListOutDto> findPostsByDate(Integer startDate , Integer start, Integer limit){
+
+        String sql = "	SELECT		"+
+                "		p.id,	"+
+                "		p.comment_count,	"+
+                "		p.coin_count,	"+
+                "		p.content,	"+
+                "		p.create_time,	"+
+                "		p.favorite_count,	"+
+                "		p.likes_count,	"+
+                "		p.read_count,	"+
+                "		p.title,	"+
+                "		p.topic_id,	"+
+                "		p.user_id,	"+
+                "		p.words_count,	"+
+                "		u.avatar_img_id,	"+
+                "		u.nickname,	"+
+                "       u.follow_count,"+
+                "       i.url, "+
+                "       t.name topicName"+
+                "	FROM		"+
+                "		posts p	"+
+                "	LEFT JOIN user u ON u.id = p.user_id		"+
+                "	LEFT JOIN  image i ON i.id = u.avatar_img_id		"+
+                "   LEFT JOIN  topic t ON t.id = p.topic_id " +
+                "	WHERE		"+
+                "		p.state = 'published'	"+
+                "	AND p.deleted = 0		"+
+                (  startDate==null?"":" AND  date_format(p.create_time,'%Y%m%d') >= ? " ) +
+                "	ORDER BY		"+
+                "		p.comment_count*2 + likes_count*3 + favorite_count * 4  +  read_count desc	"+
+                "	LIMIT ?,?		";
+
+
+        List list = new ArrayList(){{
+
+            if(startDate != null){
+                add(startDate);
+            }
+
+            add(start);
+            add(limit);
+        }};
+
+        return npjt.getJdbcOperations().query(sql, new BeanPropertyRowMapper(PostsListOutDto.class) ,list.toArray());
+
+
+    }
+
+
+
+
+
 }
