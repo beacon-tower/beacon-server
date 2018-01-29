@@ -21,11 +21,24 @@ public class IndexService {
     private PostsSqlDao postsSqlDao;
 
     /**
-     * 根据文章热度查询分页查询
+     * 根据文章主题分页查询
      * */
     public List<PostsListOutDto> findPostsByHot(Integer topicId , Integer pageNumber, Integer limit){
         Integer start = (pageNumber*limit-limit);
         return postsSqlDao.findPostsByHot(topicId, start, limit);
+    }
+
+
+    /**
+     * 根据文章热度查询分页查询
+     * @param startDate 格式如：20171231
+     * */
+    public List<PostsListOutDto> findPostsByDate(Integer startDate , Integer pageNumber, Integer limit){
+
+        Integer start = (pageNumber*limit-limit);
+
+        return postsSqlDao.findPostsByDate(startDate, start, limit);
+
     }
 
 }
