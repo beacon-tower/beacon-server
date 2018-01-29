@@ -25,7 +25,7 @@ public class MyController extends BaseController {
     @Inject
     private UserFavoriteService userFavoriteService;
 
-    @ApiOperation(value = "我的收藏", notes = "我的收藏", response = PageResult.class)
+    @ApiOperation(value = "我的收藏", notes = "我的收藏")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "keyword", value = "文章标题或作者", paramType = "query", dataType = "string"),
             @ApiImplicitParam(name = "pageNumber", value = "页码", paramType = "query", dataType = "int"),
@@ -39,7 +39,7 @@ public class MyController extends BaseController {
         return ResData.success(pageResult);
     }
 
-    @ApiOperation(value = "取消收藏", notes = "取消收藏", response = ResData.class)
+    @ApiOperation(value = "取消收藏", notes = "取消收藏")
     @PostMapping("/remove_favorite/{id}")
     public synchronized ResData removeFavorite(@ApiParam(name = "id", value = "文章id")
                                                @PathVariable("id") Integer postsId) {

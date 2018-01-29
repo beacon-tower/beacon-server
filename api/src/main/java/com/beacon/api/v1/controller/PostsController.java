@@ -5,7 +5,6 @@ import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.pojo.CommentInputDto;
 import com.beacon.pojo.CommentOutDto;
-import com.beacon.pojo.CommentParentOutDto;
 import com.beacon.pojo.PageResult;
 import com.beacon.service.PostsService;
 import com.beacon.service.UserFollowService;
@@ -35,7 +34,7 @@ public class PostsController extends BaseController {
     @Inject
     private UserFollowService userFollowService;
 
-    @ApiOperation(value = "文章详情", notes = "文章详情页面内容", response = ResData.class)
+    @ApiOperation(value = "文章详情", notes = "文章详情页面内容")
     @PostMapping("{id}")
     public ResData detail(@ApiParam(name = "id", value = "文章id")
                           @PathVariable("id") Integer postsId) {
@@ -43,7 +42,7 @@ public class PostsController extends BaseController {
         return ResData.success();
     }
 
-    @ApiOperation(value = "关注文章作者", notes = "文章详情页面，关注文章作者", response = ResData.class)
+    @ApiOperation(value = "关注文章作者", notes = "文章详情页面，关注文章作者")
     @PostMapping("/toggle_follow_author/{id}")
     public synchronized ResData toggleFollowAuthor(@ApiParam(name = "id", value = "作者id")
                                                    @PathVariable("id") Integer followUserId) {
@@ -51,7 +50,7 @@ public class PostsController extends BaseController {
         return ResData.success();
     }
 
-    @ApiOperation(value = "收藏文章", notes = "文章详情页面，对文章收藏", response = ResData.class)
+    @ApiOperation(value = "收藏文章", notes = "文章详情页面，对文章收藏")
     @PostMapping("{id}/favorite")
     public synchronized ResData addFavorite(@ApiParam(name = "id", value = "文章id")
                                             @PathVariable("id") Integer postsId) {
@@ -59,7 +58,7 @@ public class PostsController extends BaseController {
         return ResData.success();
     }
 
-    @ApiOperation(value = "点赞文章", notes = "文章详情页面，对文章点赞", response = ResData.class)
+    @ApiOperation(value = "点赞文章", notes = "文章详情页面，对文章点赞")
     @PostMapping("{id}/like")
     public synchronized ResData like(@ApiParam(name = "id", value = "文章id")
                                      @PathVariable("id") Integer postsId) {
@@ -67,7 +66,7 @@ public class PostsController extends BaseController {
         return ResData.success();
     }
 
-    @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论", response = CommentParentOutDto.class)
+    @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论")
     @PostMapping("{id}/comment")
     public ResData<CommentOutDto> addComment(@ApiParam(name = "id", value = "文章id")
                                              @PathVariable("id") Integer postsId,
@@ -80,7 +79,7 @@ public class PostsController extends BaseController {
         return ResData.success(commentOutDto);
     }
 
-    @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论列表", response = PageResult.class)
+    @ApiOperation(value = "文章评论", notes = "文章详情页面，文章评论列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNumber", value = "页码", paramType = "query", dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "每页多少条", paramType = "query", dataType = "int"),

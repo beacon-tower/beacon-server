@@ -31,7 +31,7 @@ public class SmsController extends BaseController {
     @Inject
     private SmsService smsService;
 
-    @ApiOperation(value = "发送短信验证码", response = ResData.class)
+    @ApiOperation(value = "发送短信验证码")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
             @ApiImplicitParam(name = "type", value = "短信类型", allowableValues = "register",

@@ -22,7 +22,4 @@ public interface PostsDao extends BaseDao<Posts, Integer> {
 
     Posts findByIdAndState(Integer id, String state);
 
-
-
-
 }

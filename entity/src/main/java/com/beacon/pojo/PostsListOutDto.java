@@ -1,7 +1,5 @@
 package com.beacon.pojo;
 
-import com.beacon.entity.Posts;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

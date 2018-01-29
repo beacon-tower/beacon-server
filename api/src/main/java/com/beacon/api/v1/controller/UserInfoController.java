@@ -34,7 +34,7 @@ public class UserInfoController extends BaseController {
     @Inject
     private UserMapper userMapper;
 
-    @ApiOperation(value = "用户信息", response = UserInfoDto.class)
+    @ApiOperation(value = "用户信息")
     @GetMapping()
     public ResData<UserInfoDto> detail() {
         UserInfoDto userInfoDto = userMapper.toInfoDto(ShiroUtils.getUser());
