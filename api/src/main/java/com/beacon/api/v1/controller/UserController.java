@@ -79,26 +79,26 @@ public class UserController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
             @ApiImplicitParam(name = "nickname", value = "昵称", required = true, paramType = "form", dataType = "string"),
-            @ApiImplicitParam(name = "secret", value = "钱包密钥", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "publicKey", value = "钱包公钥需要根据用户提供的密码在在本地用程序生成", required = true, paramType = "form", dataType = "string"),
     })
     @PostMapping("register/third/step")
     public ResData<String> registerThirdStep(@RequestParam String mobile,
                                              @RequestParam String nickname,
-                                             @RequestParam String secret) {
+                                             @RequestParam String publicKey) {
         AssertUtils.isMobile(UserResCode.MOBILE_FORMAT_ERROR, mobile);
 
-        return userService.registerThirdStep(mobile, nickname, secret);
+        return userService.registerThirdStep(mobile, nickname, publicKey);
     }
 
     @ApiOperation(value = "用户登录", notes = "用户输入手机号/邮箱、钱包密钥登录", response = ResData.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "手机号/邮箱", required = true, paramType = "form", dataType = "string"),
-            @ApiImplicitParam(name = "secret", value = "钱包密钥", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "publicKey", value = "钱包公钥需要根据用户提供的密码在在本地用程序生成", required = true, paramType = "form", dataType = "string"),
     })
     @PostMapping("login")
     public ResData<String> login(@RequestParam String username,
-                                 @RequestParam String secret) {
-        return userService.login(username, secret);
+                                 @RequestParam String publicKey) {
+        return userService.login(username, publicKey);
     }
 
     @ApiOperation(value = "用户登出")

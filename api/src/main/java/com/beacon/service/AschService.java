@@ -29,7 +29,11 @@ public class AschService {
         return AschSDK.Account.getNewAccounts();
     }
 
-    public AschResult secureLogin(String secret) {
-        return AschSDK.Account.secureLogin(secret);
+    public AschResult publicKeyLogin(String publicKey) {
+        return AschSDK.Account.publicKeyLogin(publicKey);
+    }
+
+    public AschResult getPublicKey(String address) {
+        return AschSDK.Account.getPublicKey(address);
     }
 }

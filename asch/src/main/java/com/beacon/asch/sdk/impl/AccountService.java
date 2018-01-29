@@ -22,6 +22,17 @@ public class AccountService extends AschRESTService implements Account {
     }
 
     @Override
+    public AschResult publicKeyLogin(String publicKey) {
+        try {
+            ParameterMap parameters = parametersWithPublicKeyField(publicKey);
+
+            return post(AschServiceUrls.Account.SECURE_LOGIN, parameters);
+        } catch (Exception ex) {
+            return fail(ex);
+        }
+    }
+
+    @Override
     public AschResult secureLogin(String secret) {
         try {
             Argument.require(Validation.isValidSecret(secret), "invalid secret");

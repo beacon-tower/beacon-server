@@ -7,9 +7,8 @@ public class TestData {
 
     //luckyhua
     public static final String root = "http://sofly.cc:4096";
-    public static final String secret = "ten mystery ketchup trim prosper expose switch what frame furnace parade fruit";
-//    public static final String address = "ACvpFUYnFLSSBgoHtjRbvFck7ABBPm6udy";
-    public static final String address = "AJxkNf1SV8PJ4DFqDnoUUACHbx7mbdXgNE";
+    public static final String secret = "season adult nerve umbrella wheel rate beach copper element sponsor force enhance";
+    public static final String address = "ABiJCTd8dx7vjs2TAnGYD5foRU9PsjDf9e";
 
     public static final String secondSecret = "zhough212";
     public static final String userName = "asch_g001";

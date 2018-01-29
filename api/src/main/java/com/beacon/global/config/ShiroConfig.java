@@ -74,17 +74,19 @@ public class ShiroConfig {
         factoryBean.setFilters(filters);
 
         Map<String, String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/api/v1/index/**", "anon");
         filterMap.put("/webjars/**", "anon");
+        filterMap.put("/swagger-ui.html", "anon");
+        filterMap.put("/swagger-resources/**", "anon");
         filterMap.put("/druid/**", "anon");
         filterMap.put("/**/*.css", "anon");
         filterMap.put("/**/*.js", "anon");
         filterMap.put("/**/*.html", "anon");
         filterMap.put("/fonts/**", "anon");
         filterMap.put("/plugins/**", "anon");
-        filterMap.put("/swagger/**", "anon");
         filterMap.put("/doc/**", "anon");
         filterMap.put("/view/**", "anon");
+
+        filterMap.put("/api/v1/index/**", "anon");
         filterMap.put("/api/v1/user/register/**", "anon");
         filterMap.put("/api/v1/user/login", "anon");
         filterMap.put("/api/v1/posts/*", "anon");
