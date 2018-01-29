@@ -33,7 +33,7 @@ public class ImageController extends BaseController {
     @Inject
     private OssService ossService;
 
-    @ApiOperation(value = "图片上传", response = Image.class, notes = "image")
+    @ApiOperation(value = "图片上传")
     @PostMapping(value = "upload")
     public ResData<Image> upload(@ApiParam(name = "file", value = "上传的图片") @RequestParam("file") MultipartFile file) {
         AssertUtils.isTrue(PARAMS_EXCEPTION, !file.isEmpty());

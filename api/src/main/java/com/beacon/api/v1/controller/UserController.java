@@ -44,7 +44,7 @@ public class UserController extends BaseController {
     @Inject
     private SmsService smsService;
 
-    @ApiOperation(value = "用户注册", notes = "第一步，输入手机号，验证码", response = ResData.class)
+    @ApiOperation(value = "用户注册", notes = "第一步，输入手机号，验证码")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
             @ApiImplicitParam(name = "code", value = "验证码", required = true, paramType = "form", dataType = "string"),
@@ -64,7 +64,7 @@ public class UserController extends BaseController {
         return ResData.build(userService.registerFirstStep(mobile));
     }
 
-    @ApiOperation(value = "用户注册", notes = "第二步，获取钱包密钥和地址，更换钱包密钥也调用此接口", response = ResData.class, responseContainer = "Map")
+    @ApiOperation(value = "用户注册", notes = "第二步，获取钱包密钥和地址，更换钱包密钥也调用此接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
     })
@@ -75,7 +75,7 @@ public class UserController extends BaseController {
         return userService.registerSecondStep(mobile);
     }
 
-    @ApiOperation(value = "用户注册", notes = "第三步，输入昵称和钱包密钥校验", response = ResData.class)
+    @ApiOperation(value = "用户注册", notes = "第三步，输入昵称和钱包密钥校验")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "form", dataType = "string"),
             @ApiImplicitParam(name = "nickname", value = "昵称", required = true, paramType = "form", dataType = "string"),
@@ -90,7 +90,7 @@ public class UserController extends BaseController {
         return userService.registerThirdStep(mobile, nickname, publicKey);
     }
 
-    @ApiOperation(value = "用户登录", notes = "用户输入手机号/邮箱、钱包密钥登录", response = ResData.class)
+    @ApiOperation(value = "用户登录", notes = "用户输入手机号/邮箱、钱包密钥登录")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "手机号/邮箱", required = true, paramType = "form", dataType = "string"),
             @ApiImplicitParam(name = "publicKey", value = "钱包公钥需要根据用户提供的密码在在本地用程序生成", required = true, paramType = "form", dataType = "string"),

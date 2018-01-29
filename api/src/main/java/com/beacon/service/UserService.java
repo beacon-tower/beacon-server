@@ -67,15 +67,11 @@ public class UserService extends BaseService<User, Integer> {
 
 
     public List<User> findUsers(Integer pageNumber, Integer limit) {
-
         return userDao.findUsers(pageNumber * limit - limit, limit);
-
     }
 
     public List<User> findUsersNotFollow(Integer userId, Integer pageNumber, Integer limit) {
-
         return userDao.findUsersNotFollow(userId, pageNumber * limit - limit, limit);
-
     }
 
 
@@ -172,17 +168,17 @@ public class UserService extends BaseService<User, Integer> {
 //            Map<String, Object> publicKeyMap = publicKeyResult.parseMap();
 //            String publicKeyInMap = publicKeyMap.get("publicKey").toString();
 //            AssertUtils.isTrue(PUBLIC_KEY_ERROR, publicKey.equals(publicKeyInMap));
-            AschResult aschResult = aschService.publicKeyLogin(publicKey);
-            if (aschResult.isSuccessful()) {
-                Map<String, Object> parseMap = aschResult.parseMap();
-                String account = parseMap.get("account").toString();
-                String address = (String) JSONObject.parseObject(account).get("address");
-                AssertUtils.isTrue(ADDRESS_ERROR, user.getWalletAddress().equals(address));
-                //创建token
-                String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
-                return ResData.success(token);
-            }
-            return ResData.error(ASCH_CALL_FAIL, aschResult.getError());
+        AschResult aschResult = aschService.publicKeyLogin(publicKey);
+        if (aschResult.isSuccessful()) {
+            Map<String, Object> parseMap = aschResult.parseMap();
+            String account = parseMap.get("account").toString();
+            String address = (String) JSONObject.parseObject(account).get("address");
+            AssertUtils.isTrue(ADDRESS_ERROR, user.getWalletAddress().equals(address));
+            //创建token
+            String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
+            return ResData.success(token);
+        }
+        return ResData.error(ASCH_CALL_FAIL, aschResult.getError());
 //        }
 //        return ResData.error(ASCH_CALL_FAIL, publicKeyResult.getError());
     }

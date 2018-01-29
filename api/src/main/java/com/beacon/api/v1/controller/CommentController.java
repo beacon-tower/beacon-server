@@ -26,7 +26,7 @@ public class CommentController extends BaseController {
     @Inject
     private CommentService commentService;
 
-    @ApiOperation(value = "点赞评论", notes = "文章详情页面，对评论点赞", response = ResData.class)
+    @ApiOperation(value = "点赞评论", notes = "文章详情页面，对评论点赞")
     @PostMapping("{id}/like")
     public ResData like(@ApiParam(name = "id", value = "评论id")
                         @PathVariable("id") Integer commentId) {

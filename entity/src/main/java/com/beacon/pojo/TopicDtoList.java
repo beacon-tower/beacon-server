@@ -19,8 +19,11 @@ public class TopicDtoList {
     @ApiModelProperty(value = "话题名称")
     private String name;
 
-    @ApiModelProperty(value = "话题排序号")
-    private Integer seq;
+    @ApiModelProperty(notes = "是否关注")
+    private Boolean followed;
+
+    @ApiModelProperty(notes = "关注数")
+    private Integer followCount;
 
     public Integer getId() {
         return id;
@@ -38,11 +41,19 @@ public class TopicDtoList {
         this.name = name;
     }
 
-    public Integer getSeq() {
-        return seq;
+    public Boolean getFollowed() {
+        return followed;
     }
 
-    public void setSeq(Integer seq) {
-        this.seq = seq;
+    public void setFollowed(Boolean followed) {
+        this.followed = followed;
+    }
+
+    public Integer getFollowCount() {
+        return followCount;
+    }
+
+    public void setFollowCount(Integer followCount) {
+        this.followCount = followCount;
     }
 }

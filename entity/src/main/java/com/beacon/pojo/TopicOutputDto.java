@@ -84,7 +84,7 @@ public class TopicOutputDto {
         this.postsCount = postsCount;
     }
 
-    public Boolean isFollowed() {
+    public Boolean getFollowed() {
         return followed;
     }
 

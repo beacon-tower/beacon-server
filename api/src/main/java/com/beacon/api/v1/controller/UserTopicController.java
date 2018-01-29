@@ -34,7 +34,7 @@ public class UserTopicController extends BaseController {
     @Inject
     private TopicService topicService;
 
-    @ApiOperation(value = "话题开关", notes = "用户对喜欢的话题进行关注或者取消关注", response = ResData.class)
+    @ApiOperation(value = "话题开关", notes = "用户对喜欢的话题进行关注或者取消关注")
     @PostMapping("{id}/toggle_follow")
     public ResData toggleFollow(@ApiParam(name = "id", value = "被关注的话题id") @PathVariable Integer id) {
         Integer userId = ShiroUtils.getUserId();

@@ -39,7 +39,7 @@ public class AuthorController extends BaseController {
     @Inject
     private TopicService topicService;
 
-    @ApiOperation(value = "话题列表", notes = "作者进入写文章页，初始化页面调用此接口获取话题列表", response = TopicDtoList.class, responseContainer = "List")
+    @ApiOperation(value = "话题列表", notes = "作者进入写文章页，初始化页面调用此接口获取话题列表")
     @GetMapping("topics")
     public ResData<List<TopicDtoList>> getTopics() {
         Integer userId = ShiroUtils.getUserId();
@@ -47,7 +47,7 @@ public class AuthorController extends BaseController {
         return ResData.success(topics);
     }
 
-    @ApiOperation(value = "文章列表", notes = "作者进入写文章页，初始化页面调用此接口获取话题下的文章列表", response = PostsOutDto.class, responseContainer = "List")
+    @ApiOperation(value = "文章列表", notes = "作者进入写文章页，初始化页面调用此接口获取话题下的文章列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "话题id", required = true, paramType = "path", dataType = "int"),
     })
@@ -58,7 +58,7 @@ public class AuthorController extends BaseController {
         return ResData.success(postsOutDtoList);
     }
 
-    @ApiOperation(value = "文章内容", notes = "获取单篇文章的内容", response = String.class)
+    @ApiOperation(value = "文章内容", notes = "获取单篇文章的内容")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "文章id", required = true, paramType = "path", dataType = "int"),
     })
@@ -68,7 +68,7 @@ public class AuthorController extends BaseController {
         return ResData.success(content);
     }
 
-    @ApiOperation(value = "保存文章", notes = "用于新建文章/编辑已有文章的保存", response = PostsOutDto.class)
+    @ApiOperation(value = "保存文章", notes = "用于新建文章/编辑已有文章的保存")
     @PostMapping("posts")
     public ResData<PostsOutDto> postsSave(@ApiParam(name = "postInputDto", value = "文章dto")
                                           @RequestBody PostsInputDto postInputDto) {
@@ -83,7 +83,7 @@ public class AuthorController extends BaseController {
         return ResData.success(postsOutDto);
     }
 
-    @ApiOperation(value = "发布文章", notes = "对已有的文章进行发布，发布后别人可见", response = ResData.class)
+    @ApiOperation(value = "发布文章", notes = "对已有的文章进行发布，发布后别人可见")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "文章id", required = true, paramType = "path", dataType = "int"),
     })
@@ -94,7 +94,7 @@ public class AuthorController extends BaseController {
         return ResData.success();
     }
 
-    @ApiOperation(value = "移动顺序", notes = "同一话题内，移动顺序", response = ResData.class)
+    @ApiOperation(value = "移动顺序", notes = "同一话题内，移动顺序")
     @PutMapping("posts/sequence")
     public ResData<PostsOutDto> postsSequence(@ApiParam(name = "postsIdList", value = "调整顺序后的文章id列表")
                                               @RequestBody List<Integer> postsIdList) {
@@ -104,7 +104,7 @@ public class AuthorController extends BaseController {
         return ResData.success();
     }
 
-    @ApiOperation(value = "移动顺序", notes = "移动到别的话题内，默认排在最前面", response = ResData.class)
+    @ApiOperation(value = "移动顺序", notes = "移动到别的话题内，默认排在最前面")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "文章id", required = true, paramType = "path", dataType = "int"),
     })
@@ -120,7 +120,7 @@ public class AuthorController extends BaseController {
         return ResData.success();
     }
 
-    @ApiOperation(value = "删除文章", notes = "物理删除,后期可以设置为逻辑删除，可设置保留时间", response = ResData.class)
+    @ApiOperation(value = "删除文章", notes = "物理删除,后期可以设置为逻辑删除，可设置保留时间")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "文章id", required = true, paramType = "path", dataType = "int"),
     })

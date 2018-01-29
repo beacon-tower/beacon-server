@@ -16,7 +16,6 @@ import org.testng.collections.Lists;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,8 +42,6 @@ public class TopicService extends BaseService<Topic, Integer> {
         return this.topicDao;
     }
 
-
-
     public List<TopicOutputDto> findList(Integer top) {
         if (top == null) {
             top = Integer.MAX_VALUE;
@@ -67,15 +64,29 @@ public class TopicService extends BaseService<Topic, Integer> {
         if (top == null) {
             top = Integer.MAX_VALUE;
         }
-        List<Object[]> list = topicDao.findListByUserId(userId, top);
-        List<TopicDtoList> topicsDtoList = Lists.newArrayList(list.size());
-        for (Object[] obj : list) {
+        List<Topic> topicList = topicDao.findAllOrderByFollowNum(top);
+        List<TopicDtoList> topicsDtoList = Lists.newArrayList(topicList.size());
+        topicList.forEach(topic -> {
             TopicDtoList topicDtoList = new TopicDtoList();
-            topicDtoList.setId((Integer) obj[0]);
-            topicDtoList.setName((String) obj[1]);
-            topicDtoList.setSeq((Integer) obj[2]);
+            topicDtoList.setId(topic.getId());
+            topicDtoList.setName(topic.getName());
+            topicDtoList.setFollowCount(topic.getFollowCount());
+            if (userId != null) {
+                UserTopic userTopic = userTopicDao.findByUserIdAndTopicId(userId, topic.getId());
+                topicDtoList.setFollowed(userTopic != null);
+            } else {
+                topicDtoList.setFollowed(Boolean.FALSE);
+            }
             topicsDtoList.add(topicDtoList);
-        }
+        });
+
+        topicsDtoList.sort((o1, o2) -> {
+            int r = o2.getFollowed().compareTo(o1.getFollowed());
+            if(r == 0){
+                return o2.getFollowCount().compareTo(o1.getFollowCount());
+            }
+            return r;
+        });
         return topicsDtoList;
     }
 
@@ -96,14 +107,12 @@ public class TopicService extends BaseService<Topic, Integer> {
             topicOutputDtoList.add(topicOutputDto);
         });
 
-        topicOutputDtoList.sort(new Comparator<TopicOutputDto>() {
-            public int compare(TopicOutputDto o1, TopicOutputDto o2) {
-                int r = o2.isFollowed().compareTo(o1.isFollowed());
-                if(r == 0){
-                    return o2.getFollowCount().compareTo(o1.getFollowCount());
-                }
-                return r;
+        topicOutputDtoList.sort((o1, o2) -> {
+            int r = o2.getFollowed().compareTo(o1.getFollowed());
+            if(r == 0){
+                return o2.getFollowCount().compareTo(o1.getFollowCount());
             }
+            return r;
         });
 
         return topicOutputDtoList;
