@@ -21,6 +21,7 @@ public enum UserResCode implements BaseResCode {
     ADDRESS_ERROR(10009, "钱包地址有误!"),
     EMAIL_FORMAT_ERROR(10010, "邮箱格式有误!"),
     EMAIL_EXIST(10011, "邮箱已被使用!"),
+    PUBLIC_KEY_ERROR(10012, "公钥参数错误!"),
     ;
 
     private final int code;

@@ -68,17 +68,15 @@ public class UserService extends BaseService<User, Integer> {
 
     public List<User> findUsers(Integer pageNumber, Integer limit) {
 
-        return userDao.findUsers(pageNumber*limit-limit,limit);
+        return userDao.findUsers(pageNumber * limit - limit, limit);
 
     }
 
-    public List<User> findUsersNotFollow(Integer userId,Integer pageNumber, Integer limit) {
+    public List<User> findUsersNotFollow(Integer userId, Integer pageNumber, Integer limit) {
 
-        return userDao.findUsersNotFollow(userId,pageNumber*limit-limit,limit);
+        return userDao.findUsersNotFollow(userId, pageNumber * limit - limit, limit);
 
     }
-
-
 
 
     public Set<String> findPermsByUser(User user) {
@@ -111,7 +109,8 @@ public class UserService extends BaseService<User, Integer> {
             Map<String, Object> parseMap = aschResult.parseMap();
             String secret = (String) parseMap.get("secret");
             String address = (String) parseMap.get("address");
-            redisHelper.setExpire(REGISTER_MOBILE + mobile, secret, MOBILE_EXPIRE);
+            String publicKey = (String) parseMap.get("publicKey");
+            redisHelper.setExpire(REGISTER_MOBILE + mobile, publicKey, MOBILE_EXPIRE);
             Map<String, Object> map = new HashMap<>(2);
             map.put("secret", secret);
             map.put("address", address);
@@ -125,17 +124,19 @@ public class UserService extends BaseService<User, Integer> {
      * 校验注册手机号、校验密钥
      * 保存数据到数据库
      *
-     * @param mobile 手机号
+     * @param mobile    手机号
+     * @param nickname  昵称
+     * @param publicKey 钱包公钥需要根据用户提供的密码在在本地用程序生成
      * @return token信息
      */
-    public ResData<String> registerThirdStep(String mobile, String nickname, String secret) {
+    public ResData<String> registerThirdStep(String mobile, String nickname, String publicKey) {
         AssertUtils.isTrue(MOBILE_NOT_EXIST, redisHelper.exists(REGISTER_MOBILE + mobile));
         //再次校验手机号不存在库中
         User user = this.findByMobile(mobile);
         AssertUtils.isNull(MOBILE_EXIST, user);
-        String cacheSecret = (String) redisHelper.get(REGISTER_MOBILE + mobile);
-        AssertUtils.isTrue(MOBILE_EXIST, secret.equals(cacheSecret));
-        AschResult aschResult = aschService.secureLogin(secret);
+        String cachePublicKey = (String) redisHelper.get(REGISTER_MOBILE + mobile);
+        AssertUtils.isTrue(MOBILE_EXIST, publicKey.equals(cachePublicKey));
+        AschResult aschResult = aschService.publicKeyLogin(publicKey);
         if (aschResult.isSuccessful()) {
             Map<String, Object> parseMap = aschResult.parseMap();
             String account = parseMap.get("account").toString();
@@ -158,24 +159,32 @@ public class UserService extends BaseService<User, Integer> {
     /**
      * 用户登录
      *
-     * @param username 登录账号
-     * @param secret   钱包密钥
+     * @param username  登录账号
+     * @param publicKey 钱包公钥需要根据用户提供的密码在在本地用程序生成
      * @return 登录用户id
      */
-    public ResData<String> login(String username, String secret) {
+    public ResData<String> login(String username, String publicKey) {
         User user = this.findByUsername(username);
         AssertUtils.notNull(USERNAME_ERROR, user);
-        AschResult aschResult = aschService.secureLogin(secret);
-        if (aschResult.isSuccessful()) {
-            Map<String, Object> parseMap = aschResult.parseMap();
-            String account = parseMap.get("account").toString();
-            String address = (String) JSONObject.parseObject(account).get("address");
-            AssertUtils.isTrue(ADDRESS_ERROR, user.getWalletAddress().equals(address));
-            //创建token
-            String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
-            return ResData.success(token);
-        }
-        return ResData.error(ASCH_CALL_FAIL, aschResult.getError());
+//        String walletAddress = user.getWalletAddress();
+//        AschResult publicKeyResult = aschService.getPublicKey(walletAddress);
+//        if (publicKeyResult.isSuccessful()) {
+//            Map<String, Object> publicKeyMap = publicKeyResult.parseMap();
+//            String publicKeyInMap = publicKeyMap.get("publicKey").toString();
+//            AssertUtils.isTrue(PUBLIC_KEY_ERROR, publicKey.equals(publicKeyInMap));
+            AschResult aschResult = aschService.publicKeyLogin(publicKey);
+            if (aschResult.isSuccessful()) {
+                Map<String, Object> parseMap = aschResult.parseMap();
+                String account = parseMap.get("account").toString();
+                String address = (String) JSONObject.parseObject(account).get("address");
+                AssertUtils.isTrue(ADDRESS_ERROR, user.getWalletAddress().equals(address));
+                //创建token
+                String token = tokenManager.createToken(user.getId(), TokenModel.TYPE_API);
+                return ResData.success(token);
+            }
+            return ResData.error(ASCH_CALL_FAIL, aschResult.getError());
+//        }
+//        return ResData.error(ASCH_CALL_FAIL, publicKeyResult.getError());
     }
 
     /**

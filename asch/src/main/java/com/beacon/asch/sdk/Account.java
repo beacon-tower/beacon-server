@@ -31,6 +31,18 @@ public interface Account extends AschInterface {
     //返回参数说明：
     //success	boole	是否登陆成功
     //account	json	账户信息
+    AschResult publicKeyLogin(String publicKey);
+
+    //本地加密后再登陆（推荐使用）
+    //接口地址：/api/accounts/open2/
+    //请求方式：post
+    //支持格式：json
+    //接口备注：公钥需要根据用户提供的密码在在本地用程序生成
+    //请求参数说明：
+    //publicKey	string	Y	asch账户公钥
+    //返回参数说明：
+    //success	boole	是否登陆成功
+    //account	json	账户信息
     AschResult secureLogin(String secret);
 
     //通过地址取用户信息
