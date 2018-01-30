@@ -21,18 +21,18 @@ import java.io.BufferedOutputStream;
 @Api(value = "api/v1/assist", tags = "辅助功能")
 public class AssistController {
 
-    @ApiOperation(value = "下载token", notes = "将参数中的token值写入文件并下载")
+    @ApiOperation(value = "下载主密码", notes = "将参数中的主密码值写入文件并下载")
     @ApiImplicitParams({
 
-            @ApiImplicitParam(name = "token", required = true, paramType = "form", dataType = "string"),
+            @ApiImplicitParam(name = "secret", required = true, paramType = "form", dataType = "string"),
     })
     @PostMapping("token/download")
-    public void login(@RequestParam String token, HttpServletResponse response) throws Exception {
+    public void login(@RequestParam String secret, HttpServletResponse response) throws Exception {
 
         response.setContentType("text/plain");
-        response.setHeader("Content-disposition","attachment; filename=token.txt");
+        response.setHeader("Content-disposition","attachment; filename=secret.txt");
         BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
-        bos.write(token.getBytes());
+        bos.write(secret.getBytes());
         bos.close();
 
     }
