@@ -25,7 +25,7 @@ public class IndexService {
      * */
     public List<PostsListOutDto> findPostsByHot(Integer topicId , Integer pageNumber, Integer limit){
         Integer start = (pageNumber*limit-limit);
-        return postsSqlDao.findPostsByHot(topicId, start, limit);
+        return postsSqlDao.findPostsByHot(null, null, topicId, start, limit);
     }
 
 

@@ -77,15 +77,18 @@ public class UserFavoriteService extends BaseService<UserFavorite, Integer> {
      */
     public Page<PostsFavoriteDto> myFavorite(String keyword, Integer pageNumber, Integer pageSize) {
         Pageable pageable = new PageRequest(pageNumber, pageSize);
-        String sql = "select p.* from user_favorite uf left join posts p on p.id = uf.posts_id left join user u on p.user_id = u.id"
+        String querySql = "select p.* ";
+        String countSql = "select count(p.id) ";
+        String sql = "from user_favorite uf left join posts p on p.id = uf.posts_id left join user u on p.user_id = u.id"
                 + "where p.state = 'published' and u.id = " + ShiroUtils.getUserId();
         if (StringUtils.isEmpty(keyword)) {
             sql += " and (u.nickname like '%" + keyword + "%' or p.title like '%" + keyword + "%')";
         }
         sql += " order by uf.id desc limit " + pageNumber*pageSize + ", " + pageSize;
-        List<Posts> postsList = jdbcTemplate.queryForList(sql, Posts.class);
+        List<Posts> postsList = jdbcTemplate.queryForList(querySql + sql, Posts.class);
+        Integer count = jdbcTemplate.queryForObject(countSql + sql, Integer.class);
         List<PostsFavoriteDto> postsFavoriteDtoList = postsMapper.toFavoriteDtoList(postsList);
-        return !CollectionUtils.isEmpty(postsList) ? new PageImpl<>(postsFavoriteDtoList, pageable, postsList.size()) : null;
+        return !CollectionUtils.isEmpty(postsList) ? new PageImpl<>(postsFavoriteDtoList, pageable, count) : null;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.beacon.dao;
 
 
+import com.beacon.commons.utils.StringUtils;
 import com.beacon.pojo.PostsListOutDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,7 +22,7 @@ public class PostsSqlDao {
     @Inject
     private NamedParameterJdbcTemplate npjt;
 
-    public List<PostsListOutDto> findPostsByHot(Integer topicId, Integer start, Integer limit) {
+    public List<PostsListOutDto> findPostsByHot(String keyword, Integer userId, Integer topicId, Integer start, Integer limit) {
 
         String sql = "	SELECT		" +
                 "		p.id,	" +
@@ -46,10 +47,14 @@ public class PostsSqlDao {
                 "	LEFT JOIN user u ON u.id = p.user_id		" +
                 "	LEFT JOIN  image i ON i.id = u.avatar_img_id		" +
                 "   LEFT JOIN  topic t ON t.id = p.topic_id " +
+                "   LEFT JOIN  user_topic ut ON ut.user_id = u.id " +
                 "	WHERE		" +
                 "		p.state = 'published'	" +
                 "	AND p.deleted = 0		" +
                 (topicId == null ? "" : " AND  p.topic_id = ? ") +
+                (userId == null ? "" : " AND  u.user_id = ? ") +
+                (StringUtils.isEmpty(keyword) ? "" : " AND  (p.title LIKE %?% OR u.nickname LIKE %?%)") +
+                (userId == null ? "" : " AND  u.user_id = ? ") +
                 "	ORDER BY		" +
                 "		p.create_time desc	" +
                 "	LIMIT ?,?		";
@@ -57,6 +62,14 @@ public class PostsSqlDao {
         List list = new ArrayList() {{
             if (topicId != null) {
                 add(topicId);
+            }
+
+            if (userId != null) {
+                add(userId);
+            }
+
+            if (!StringUtils.isEmpty(keyword)) {
+                add(keyword);
             }
 
             add(start);
@@ -67,7 +80,43 @@ public class PostsSqlDao {
 
     }
 
+    public int countPostsByHot(String keyword, Integer userId, Integer topicId) {
 
+        String sql = "	SELECT		" +
+                "		COUNT (p.id),	" +
+                "	FROM		" +
+                "		posts p	" +
+                "	LEFT JOIN user u ON u.id = p.user_id		" +
+                "	LEFT JOIN  image i ON i.id = u.avatar_img_id		" +
+                "   LEFT JOIN  topic t ON t.id = p.topic_id " +
+                "	WHERE		" +
+                "		p.state = 'published'	" +
+                "	AND p.deleted = 0		" +
+                (topicId == null ? "" : " AND  p.topic_id = ? ") +
+                (userId == null ? "" : " AND  u.user_id = ? ") +
+                (StringUtils.isEmpty(keyword) ? "" : " AND  (p.title LIKE %?% OR u.nickname LIKE %?%)") +
+                (userId == null ? "" : " AND  u.user_id = ? ") +
+                "	ORDER BY		" +
+                "		p.create_time desc	" +
+                "	LIMIT ?,?		";
+
+        List list = new ArrayList() {{
+            if (topicId != null) {
+                add(topicId);
+            }
+
+            if (userId != null) {
+                add(userId);
+            }
+
+            if (!StringUtils.isEmpty(keyword)) {
+                add(keyword);
+            }
+        }};
+
+        return npjt.getJdbcOperations().queryForObject(sql, Integer.class, list.toArray());
+
+    }
 
 
     /**
