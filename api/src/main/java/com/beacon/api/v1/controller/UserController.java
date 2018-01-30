@@ -117,7 +117,7 @@ public class UserController extends BaseController {
             @ApiImplicitParam(name = "token", required = true, paramType = "form", dataType = "string"),
     })
     @PostMapping("download/token")
-    public ResData<String> login(@RequestParam String token) {
+    public void login(@RequestParam String token) {
 
     }
 ;
