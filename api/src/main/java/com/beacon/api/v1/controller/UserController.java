@@ -108,4 +108,19 @@ public class UserController extends BaseController {
         ShiroUtils.logout();
         return ResData.success();
     }
+
+
+
+    @ApiOperation(value = "下载token", notes = "将参数中的token值写入文件并下载")
+    @ApiImplicitParams({
+
+            @ApiImplicitParam(name = "token", required = true, paramType = "form", dataType = "string"),
+    })
+    @PostMapping("download/token")
+    public ResData<String> login(@RequestParam String token) {
+
+    }
+;
+
+
 }
