@@ -52,12 +52,12 @@ wait_for_sometime() {
         return 1
     fi
 }
-
 #启动服务程序
 service_start() {
     if [[ "r" = "$2" ]]; then
         echo "Start server by remote"
-        nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5013 -Dspring.profiles.active="$1" -cp ${application} >$null_buffer 2>&1 &
+        JAVA_MEM_OPTS = " -server -Xmx1g -Xms1g -Xmn200m -XX:PermSize=50m -Xss512k -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:LargePageSizeInBytes=28m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 "
+        nohup java ${JAVA_MEM_OPTS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5013 -Dspring.profiles.active="$1" -cp ${application} >$null_buffer 2>&1 &
     else
         echo "Start server"
         nohup java -Dspring.profiles.active="$1" -cp ${application} >$null_buffer 2>&1 &
