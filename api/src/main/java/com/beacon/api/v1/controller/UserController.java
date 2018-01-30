@@ -18,6 +18,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
 import java.util.Map;
 
 import static com.beacon.enums.code.UserResCode.CODE_ERROR;
@@ -111,16 +113,8 @@ public class UserController extends BaseController {
 
 
 
-    @ApiOperation(value = "下载token", notes = "将参数中的token值写入文件并下载")
-    @ApiImplicitParams({
 
-            @ApiImplicitParam(name = "token", required = true, paramType = "form", dataType = "string"),
-    })
-    @PostMapping("download/token")
-    public void login(@RequestParam String token) {
 
-    }
-;
 
 
 }
