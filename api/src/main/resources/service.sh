@@ -61,7 +61,7 @@ service_start() {
         nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5013 -Dspring.profiles.active="$1" ${JAVA_MEM_OPTS} -cp ${application} >$null_buffer 2>&1 &
     else
         echo "Start server"
-        nohup java -Dspring.profiles.active="$1" -cp ${application} >$null_buffer 2>&1 &
+        nohup java -Dspring.profiles.active="$1" ${JAVA_MEM_OPTS} -cp ${application} >$null_buffer 2>&1 &
     fi
 }
 
