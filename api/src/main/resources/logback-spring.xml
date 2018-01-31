@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" scanPeriod="180 seconds">
 	<!--引入默认的一些设置-->
 	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 	<!--web信息-->
