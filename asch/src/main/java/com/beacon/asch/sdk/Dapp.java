@@ -56,4 +56,22 @@ public interface Dapp extends AschInterface{
     //dappID	string	Y	dapp的id
     //transaction	json	Y	aschJS.dapp.createInnerTransaction生成的交易数据
     AschResult dappWithDraw(String dappId, String currency, long amount, String secret);
+
+    //接口地址：/api/dapps/dappID/transactions/signed
+    //请求方式：PUT
+    //支持格式：json
+    //备注：客户端签名交易(signed)-更安全，dapp内部转账,type=3
+    //请求参数说明：
+    //dappID	string	Y	dapp的id
+    //transaction	json	Y	aschJS.dapp.createInnerTransaction生成的交易数据
+    AschResult dappTransfer(String dappId, String currency, long amount, String targetAddress, String secret);
+
+    //接口地址：/api/dapps/dappID/transactions/signed
+    //请求方式：PUT
+    //支持格式：json
+    //备注：客户端签名交易(signed)-更安全，dapp设置昵称,type=4
+    //请求参数说明：
+    //dappID	string	Y	dapp的id
+    //transaction	json	Y	aschJS.dapp.createInnerTransaction生成的交易数据
+    AschResult dappSetNickname(String dappId, String nickname, String secret);
 }

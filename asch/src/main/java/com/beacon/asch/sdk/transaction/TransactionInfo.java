@@ -52,7 +52,9 @@ public class TransactionInfo {
         return this;
     }
 
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
     public TransactionInfo setMessage(String message) {
         this.message = message;
@@ -153,18 +155,26 @@ public class TransactionInfo {
     private AssetInfo assetInfo = null;
     private String args = null;
 
-    public byte[] getBytes(boolean skipSignature , boolean skipSignSignature){
+    public byte[] getBytes(boolean skipSignature, boolean skipSignSignature) {
         //1 + 4 + 32 + 32 + 8 + 8 + ? + ? + 64 + 64
         //type(1)|timestamp(4)|senderPublicKey(32)|requesterPublicKey(32)|recipientId(8)|amount(8)|
         //message(?)|asset(?)|setSignature(64)|signSignature(64)
 
         ByteBuffer buffer = ByteBuffer.allocate(MAX_BUFFER_SIZE).order(ByteOrder.LITTLE_ENDIAN)
-                .put(getType().byteValue())
                 .putInt(getTimestamp())
+                .put(Encoding.getUTF8Bytes(getFee()))
+                .put(getType().byteValue())
                 .put(Decoding.unsafeDecodeHex(getSenderPublicKey()))
-                .put(Decoding.unsafeDecodeHex(getRequesterPublicKey()))
-                .put(getRecipientIdBuffer())
-                .put(getMessageBuffer());
+                .put(Decoding.unsafeDecodeHex(getRequesterPublicKey()));
+
+        if (getMessage() != null) {
+            buffer.put(getMessageBuffer());
+        }
+
+        if (getRecipientId() != null) {
+            buffer.put(getRecipientIdBuffer());
+        }
+
         if (getAmount() != null) {
             buffer.putLong(getAmount());
         }
@@ -174,14 +184,14 @@ public class TransactionInfo {
         }
 
         if (getArgs() != null) {
-            buffer.put(getArgs().getBytes());
+            buffer.put(Encoding.getUTF8Bytes(getArgs()));
         }
 
-        if (!skipSignature){
+        if (!skipSignature) {
             buffer.put(Decoding.unsafeDecodeHex(getSignature()));
         }
 
-        if (!skipSignSignature){
+        if (!skipSignSignature) {
             buffer.put(Decoding.unsafeDecodeHex(getSignSignature()));
         }
 
@@ -192,12 +202,12 @@ public class TransactionInfo {
         return result;
     }
 
-    private byte[] getRecipientIdBuffer(){
-        if (null == recipientId)  return new byte[8];
+    private byte[] getRecipientIdBuffer() {
+        if (null == recipientId) return new byte[8];
         //数字地址
-        if (recipientId.matches("^\\d+")){
+        if (recipientId.matches("^\\d+")) {
             byte[] idBuffer = new BigInteger(recipientId).toByteArray();
-            int length = Math.min(8 ,idBuffer.length);
+            int length = Math.min(8, idBuffer.length);
             int fromIndex = idBuffer.length > 8 ? idBuffer.length - 8 : 0;
             byte[] result = new byte[8];
             System.arraycopy(idBuffer, fromIndex, result, 0, length);
@@ -208,7 +218,12 @@ public class TransactionInfo {
         return Encoding.getUTF8Bytes(recipientId);
     }
 
-    private byte[] getMessageBuffer(){
-       return Encoding.getUTF8Bytes(message);
+    private byte[] getMessageBuffer() {
+        return Encoding.getUTF8Bytes(message);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Encoding.getUTF8Bytes("1"));
+        System.out.println("1".getBytes());
     }
 }

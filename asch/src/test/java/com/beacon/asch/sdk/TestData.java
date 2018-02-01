@@ -14,7 +14,7 @@ public class TestData {
     public static final String userName = "asch_g001";
 
     //asch_g101 11705168753296944226 00dd0e70fe22e9b580ba0ccf696f1d108a6475bb303b8689947ba346b0b02ad9
-    public static final String targetAddress = "A8v3qQm3C6yRjvdjgU1xvhxAfFcGBU3S6n";
+    public static final String targetAddress = "AJxkNf1SV8PJ4DFqDnoUUACHbx7mbdXgNE";
 
     //asch_g101	11705168753296944226 00dd0e70fe22e9b580ba0ccf696f1d108a6475bb303b8689947ba346b0b02ad9
     //asch_g96	16093201530526106149 0225c340addf24211f4b51ea24cb0565c67f09600f57bad89af350b38b08a366

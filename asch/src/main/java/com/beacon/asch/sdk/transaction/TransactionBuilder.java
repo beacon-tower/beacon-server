@@ -1,6 +1,5 @@
 package com.beacon.asch.sdk.transaction;
 
-import com.alibaba.fastjson.JSONObject;
 import com.beacon.asch.sdk.TransactionType;
 import com.beacon.asch.sdk.impl.AschConst;
 import com.beacon.asch.sdk.impl.AschFactory;
@@ -167,16 +166,17 @@ public class TransactionBuilder {
 
     }
 
-    public TransactionInfo buildInnerTransfer(String currency, long amount, String secret) throws SecurityException {
+    public TransactionInfo buildInnerTransfer(String args, TransactionType transactionType, String secret) throws SecurityException {
 
         KeyPair keyPair = getSecurity().generateKeyPair(secret);
 
         TransactionInfo transaction = new TransactionInfo()
-                .setTransactionType(TransactionType.Delegate)
+                .setTransactionType(transactionType)
                 .setFee(String.valueOf(AschConst.Fees.TRANSFER))
                 .setTimestamp(getSecurity().getTransactionTimestamp())
                 .setSenderPublicKey(getSecurity().encodePublicKey(keyPair.getPublic()))
-                .setArgs(JSONObject.toJSONString(new String[]{currency, String.valueOf(amount)}));
+                .setArgs(args);
         return signature(transaction, keyPair.getPrivate(), null);
     }
+
 }

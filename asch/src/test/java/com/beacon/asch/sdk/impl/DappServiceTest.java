@@ -14,13 +14,13 @@ import com.beacon.asch.sdk.dto.query.DappQureyParameters;
  */
 public class DappServiceTest {
     @BeforeSuite
-    public void SetUp(){
+    public void SetUp() {
         AschSDK.Config.setAschServer(TestData.root);
     }
 
     @Test
     public void testGetBlocksHeight() throws Exception {
-        AschResult result= AschSDK.Dapp.getBlocksHeight(TestData.dappId);
+        AschResult result = AschSDK.Dapp.getBlocksHeight(TestData.dappId);
         Assert.assertTrue(result.isSuccessful());
     }
 
@@ -28,25 +28,38 @@ public class DappServiceTest {
     public void testGetBlocks() throws Exception {
         DappQureyParameters parameters = new DappQureyParameters();
         parameters.setLimit(10);
-        AschResult result= AschSDK.Dapp.getBlocks(TestData.dappId,parameters);
+        AschResult result = AschSDK.Dapp.getBlocks(TestData.dappId, parameters);
         Assert.assertTrue(result.isSuccessful());
     }
 
     @Test
     public void testGetAccount() throws Exception {
-        AschResult result= AschSDK.Dapp.getAccount(TestData.dappId,TestData.dappAddress);
+        AschResult result = AschSDK.Dapp.getAccount(TestData.dappId, TestData.dappAddress);
         Assert.assertTrue(result.isSuccessful());
     }
 
     @Test
     public void testDappDeposit() throws Exception {
-        AschResult result= AschSDK.Dapp.dappDeposit(TestData.dappId,"FHT",20*100000000,TestData.secret,null);
+        AschResult result = AschSDK.Dapp.dappDeposit(TestData.dappId, "FHT", 20 * 100000000, TestData.secret, null);
         Assert.assertTrue(result.isSuccessful());
     }
 
     @Test
     public void testDappWithDraw() throws Exception {
-        AschResult result= AschSDK.Dapp.dappWithDraw(TestData.dappId,"FHChain.FHT",2*100000000,TestData.secret);
+        AschResult result = AschSDK.Dapp.dappWithDraw(TestData.dappId, "FHChain.FHT", 2 * 100000000, TestData.secret);
+        Assert.assertTrue(result.isSuccessful());
+    }
+
+    @Test
+    public void testDappTransfer() throws Exception {
+        AschResult result = AschSDK.Dapp.dappTransfer(TestData.dappId, "FHChain.FHT", 2 * 100000000, TestData.targetAddress, TestData.secret);
+        Assert.assertTrue(result.isSuccessful());
+    }
+
+    @Test
+    public void testDappSetNickname() throws Exception {
+        String nickname = "luckyhua";
+        AschResult result = AschSDK.Dapp.dappSetNickname(TestData.dappId, nickname, TestData.secret);
         Assert.assertTrue(result.isSuccessful());
     }
 

@@ -1,7 +1,9 @@
 package com.beacon.asch.sdk.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.beacon.asch.sdk.AschResult;
 import com.beacon.asch.sdk.Dapp;
+import com.beacon.asch.sdk.TransactionType;
 import com.beacon.asch.sdk.dbc.Argument;
 import com.beacon.asch.sdk.dbc.ContractException;
 import com.beacon.asch.sdk.dto.query.DappQureyParameters;
@@ -60,10 +62,44 @@ public class DappService extends AschRESTService implements Dapp {
         try {
             Argument.notNull(dappId, "dappId is null");
             Argument.require(Validation.isValidSecret(secret), "invalid secret");
-            TransactionInfo transaction = getTransactionBuilder().buildInnerTransfer(currency, amount, secret);
+            TransactionInfo transaction = getTransactionBuilder().buildInnerTransfer(
+                    JSONObject.toJSONString(new String[]{currency, String.valueOf(amount)}),
+                    TransactionType.Delegate, secret);
             ParameterMap transactionParameter = new ParameterMap()
                     .put("transaction", transaction);
-            return putMagic(MessageFormat.format(AschServiceUrls.Dapp.WITHDRAW, dappId), transactionParameter);
+            return putMagic(MessageFormat.format(AschServiceUrls.Dapp.INNER_TRANSFER, dappId), transactionParameter);
+        } catch (Exception ex) {
+            return fail(ex);
+        }
+    }
+
+    @Override
+    public AschResult dappTransfer(String dappId, String currency, long amount, String targetAddress, String secret) {
+        try {
+            Argument.notNull(dappId, "dappId is null");
+            Argument.require(Validation.isValidSecret(secret), "invalid secret");
+            TransactionInfo transaction = getTransactionBuilder().buildInnerTransfer(
+                    JSONObject.toJSONString(new String[]{currency, String.valueOf(amount), targetAddress}),
+                    TransactionType.Vote, secret);
+            ParameterMap transactionParameter = new ParameterMap()
+                    .put("transaction", transaction);
+            return putMagic(MessageFormat.format(AschServiceUrls.Dapp.INNER_TRANSFER, dappId), transactionParameter);
+        } catch (Exception ex) {
+            return fail(ex);
+        }
+    }
+
+    @Override
+    public AschResult dappSetNickname(String dappId, String nickname, String secret) {
+        try {
+            Argument.notNull(dappId, "dappId is null");
+            Argument.require(Validation.isValidSecret(secret), "invalid secret");
+            TransactionInfo transaction = getTransactionBuilder().buildInnerTransfer(
+                    JSONObject.toJSONString(new String[]{nickname}),
+                    TransactionType.MultiSignature, secret);
+            ParameterMap transactionParameter = new ParameterMap()
+                    .put("transaction", transaction);
+            return putMagic(MessageFormat.format(AschServiceUrls.Dapp.INNER_TRANSFER, dappId), transactionParameter);
         } catch (Exception ex) {
             return fail(ex);
         }
