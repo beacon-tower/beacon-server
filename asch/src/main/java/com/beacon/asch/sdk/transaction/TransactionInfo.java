@@ -68,11 +68,11 @@ public class TransactionInfo {
         return this;
     }
 
-    public Long getFee() {
+    public String getFee() {
         return fee;
     }
 
-    public TransactionInfo setFee(Long fee) {
+    public TransactionInfo setFee(String fee) {
         this.fee = fee;
         return this;
     }
@@ -146,7 +146,7 @@ public class TransactionInfo {
     private String message = null;
     private Integer timestamp = null;
     private Long amount = null;
-    private Long fee = null;
+    private String fee = null;
 
     private String signature = null;
     private String signSignature = null;
