@@ -48,5 +48,12 @@ public interface Dapp extends AschInterface{
     //备注：充值时在主链发生type=6的交易（intransfer），dapp内部会自动调用编号为1的智能合约进行dapp内部充值 请求参数说明：
     AschResult dappDeposit(String dappId, String currency, long amount, String secret, String secondSecret);
 
-
+    //接口地址：/api/dapps/dappID/transactions/signed
+    //请求方式：PUT
+    //支持格式：json
+    //备注：客户端签名交易(signed)-更安全，dapp提现,type=2
+    //请求参数说明：
+    //dappID	string	Y	dapp的id
+    //transaction	json	Y	aschJS.dapp.createInnerTransaction生成的交易数据
+    AschResult dappWithDraw(String dappId, String currency, long amount, String secret);
 }

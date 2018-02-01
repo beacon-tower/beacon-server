@@ -36,9 +36,9 @@ public class TestData {
 
     public static final String senderPublicKey = "9d986947594da0223958a88df625f0e8fb1f4bcc278845b3fe22b7f5aeef50ab";
 
-    public static final String dappId = "865179a276dfba7f552d76824c732bd5d506e890c9c3d8fc7e0665d5b1db9263";
+    public static final String dappId = "398533f8cc90299733976ba764abf01e6be9c4b387fe7603e9d8b88ed216fe4e";
 
-    public static final String dappAddress = "ACvpFUYnFLSSBgoHtjRbvFck7ABBPm6udy";
+    public static final String dappAddress = "ABiJCTd8dx7vjs2TAnGYD5foRU9PsjDf9e";
 
     public static String publicKey(){
         return AschSDK.Helper.getPublicKey(secret);

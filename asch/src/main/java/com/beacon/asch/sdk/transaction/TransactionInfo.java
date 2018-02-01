@@ -118,6 +118,15 @@ public class TransactionInfo {
         return this;
     }
 
+    public String getArgs() {
+        return args;
+    }
+
+    public TransactionInfo setArgs(String args) {
+        this.args = args;
+        return this;
+    }
+
     @JSONField
     public AssetInfo getAsset() {
         return assetInfo;
@@ -142,6 +151,7 @@ public class TransactionInfo {
     private String signature = null;
     private String signSignature = null;
     private AssetInfo assetInfo = null;
+    private String args = null;
 
     public byte[] getBytes(boolean skipSignature , boolean skipSignSignature){
         //1 + 4 + 32 + 32 + 8 + 8 + ? + ? + 64 + 64
@@ -154,9 +164,18 @@ public class TransactionInfo {
                 .put(Decoding.unsafeDecodeHex(getSenderPublicKey()))
                 .put(Decoding.unsafeDecodeHex(getRequesterPublicKey()))
                 .put(getRecipientIdBuffer())
-                .putLong(getAmount())
-                .put(getMessageBuffer())
-                .put(getAsset().assetBytes());
+                .put(getMessageBuffer());
+        if (getAmount() != null) {
+            buffer.putLong(getAmount());
+        }
+
+        if (getAsset() != null) {
+            buffer.put(getAsset().assetBytes());
+        }
+
+        if (getArgs() != null) {
+            buffer.put(getArgs().getBytes());
+        }
 
         if (!skipSignature){
             buffer.put(Decoding.unsafeDecodeHex(getSignature()));

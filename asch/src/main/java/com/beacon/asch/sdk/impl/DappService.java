@@ -25,18 +25,17 @@ public class DappService extends AschRESTService implements Dapp {
         try {
             Argument.notNull(dappId, "dappId is null");
             ParameterMap query = parametersFromObject(parameters);
-            return get(MessageFormat.format(AschServiceUrls.Dapp.GET_BLOCKS, dappId),  query);
-        }
-        catch (Exception ex){
+            return get(MessageFormat.format(AschServiceUrls.Dapp.GET_BLOCKS, dappId), query);
+        } catch (Exception ex) {
             return fail(ex);
         }
     }
 
     @Override
-    public AschResult getAccount(String dappId,String address) {
+    public AschResult getAccount(String dappId, String address) {
         try {
             Argument.notNull(dappId, "dappId is null");
-            return get(MessageFormat.format(AschServiceUrls.Dapp.GET_ACCOUNT,dappId,address));
+            return get(MessageFormat.format(AschServiceUrls.Dapp.GET_ACCOUNT, dappId, address));
         } catch (ContractException ex) {
             return fail(ex);
         }
@@ -49,10 +48,23 @@ public class DappService extends AschRESTService implements Dapp {
             Argument.require(Validation.isValidSecret(secret), "invalid secret");
             Argument.optional(secondSecret, Validation::isValidSecondSecret, "invalid second secret");
             TransactionInfo transaction = getTransactionBuilder()
-                    .buildInTransfer(dappId, currency,amount, secret, secondSecret);
+                    .buildInTransfer(dappId, currency, amount, secret, secondSecret);
             return broadcastTransaction(transaction);
+        } catch (Exception ex) {
+            return fail(ex);
         }
-        catch (Exception ex){
+    }
+
+    @Override
+    public AschResult dappWithDraw(String dappId, String currency, long amount, String secret) {
+        try {
+            Argument.notNull(dappId, "dappId is null");
+            Argument.require(Validation.isValidSecret(secret), "invalid secret");
+            TransactionInfo transaction = getTransactionBuilder().buildInnerTransfer(currency, amount, secret);
+            ParameterMap transactionParameter = new ParameterMap()
+                    .put("transaction", transaction);
+            return putMagic(MessageFormat.format(AschServiceUrls.Dapp.WITHDRAW, dappId), transactionParameter);
+        } catch (Exception ex) {
             return fail(ex);
         }
     }

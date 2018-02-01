@@ -86,6 +86,7 @@ public final class AschServiceUrls {
          static final String GET_BLOCKS_HEIGHT = "/api/dapps/{0}/blocks/height";
          static final String GET_BLOCKS = "/api/dapps/{0}/blocks";
          static final String GET_ACCOUNT = "/api/dapps/{0}/accounts/{1}";
+         static final String WITHDRAW = "/api/dapps/{0}/transactions/signed";
     }
 
 }

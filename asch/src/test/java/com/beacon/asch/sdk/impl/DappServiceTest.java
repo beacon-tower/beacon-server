@@ -38,13 +38,16 @@ public class DappServiceTest {
         Assert.assertTrue(result.isSuccessful());
     }
 
-
     @Test
     public void testDappDeposit() throws Exception {
-        AschResult result= AschSDK.Dapp.dappDeposit(TestData.dappId,"XAS",2000000000,TestData.secret,null);
+        AschResult result= AschSDK.Dapp.dappDeposit(TestData.dappId,"FHT",20*100000000,TestData.secret,null);
         Assert.assertTrue(result.isSuccessful());
     }
 
-
+    @Test
+    public void testDappWithDraw() throws Exception {
+        AschResult result= AschSDK.Dapp.dappWithDraw(TestData.dappId,"FHChain.FHT",2*100000000,TestData.secret);
+        Assert.assertTrue(result.isSuccessful());
+    }
 
 }

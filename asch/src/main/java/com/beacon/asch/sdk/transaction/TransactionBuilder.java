@@ -1,5 +1,6 @@
 package com.beacon.asch.sdk.transaction;
 
+import com.alibaba.fastjson.JSONObject;
 import com.beacon.asch.sdk.TransactionType;
 import com.beacon.asch.sdk.impl.AschConst;
 import com.beacon.asch.sdk.impl.AschFactory;
@@ -136,7 +137,6 @@ public class TransactionBuilder {
             KeyPair secondKeyPair = getSecurity().generateKeyPair(secondSecret);
             transaction.setSignSignature(getSecurity().SignSignature(transaction, secondKeyPair.getPrivate()));
         }
-
         transaction.setTransactionId(getSecurity().generateTransactionId(transaction));
         return transaction;
     }
@@ -152,12 +152,25 @@ public class TransactionBuilder {
 
         TransactionInfo transaction =  newTransaction(
                 TransactionType.InTransfer,
-                "XAS".equals(currency) ? amount : 0L,
+                "FHT".equals(currency) ? amount : 0L,
                 AschConst.Fees.TRANSFER,
                 keyPair.getPublic())
-                .setAsset(new InTransferAssetInfo(dappId, currency, "XAS".equals(currency) ? 0L : amount));
+                .setAsset(new InTransferAssetInfo(dappId, currency, "FHT".equals(currency) ? amount : 0L));
 
         return signatureAndGenerateTransactionId(transaction, keyPair.getPrivate(), secondSecret);
 
+    }
+
+    public TransactionInfo buildInnerTransfer(String currency, long amount, String secret)throws SecurityException {
+
+        KeyPair keyPair = getSecurity().generateKeyPair(secret);
+
+        TransactionInfo transaction =  new TransactionInfo()
+                .setTransactionType(TransactionType.Delegate)
+                .setFee(AschConst.Fees.TRANSFER)
+                .setTimestamp(getSecurity().getTransactionTimestamp())
+                .setSenderPublicKey(getSecurity().encodePublicKey(keyPair.getPublic()))
+                .setArgs(JSONObject.toJSONString(new String[]{currency, String.valueOf(amount)}));
+        return signatureAndGenerateTransactionId(transaction, keyPair.getPrivate(), null);
     }
 }
