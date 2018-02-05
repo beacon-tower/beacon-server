@@ -13,12 +13,14 @@ import com.beacon.pojo.*;
 import com.beacon.utils.BeanUtils;
 import com.beacon.utils.ShiroUtils;
 import com.beacon.utils.WordsUtils;
+import com.google.common.collect.Lists;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.beacon.enums.code.PostsResCode.POSTS_ID_ERROR;
@@ -146,11 +148,15 @@ public class PostsService extends BaseService<Posts, Integer> {
      * @param postsIdList 交换完后的id顺序
      */
     public void sequence(List<Integer> postsIdList) {
-        List<Posts> postsList = super.findList(postsIdList);
-        for (int i = 0; i < postsList.size(); i++) {
-            Posts posts = postsList.get(i);
+        Map<Integer, Posts> postsMap = super.findList(postsIdList)
+                .stream().collect(Collectors.toMap(Posts::getId, posts -> posts));
+        List<Posts> postsList = Lists.newLinkedList();
+        for (int i = 0; i < postsIdList.size(); i++) {
+            Integer id = postsIdList.get(i);
+            Posts posts = postsMap.get(id);
             posts.setSeqInTopic(i);
             posts.setUpdateTime(new Date());
+            postsList.add(posts);
         }
         super.update(postsList);
     }
