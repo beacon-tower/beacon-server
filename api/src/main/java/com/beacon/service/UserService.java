@@ -199,6 +199,9 @@ public class UserService extends BaseService<User, Integer> {
             AssertUtils.isNull(EMAIL_EXIST, user);
         }
         BeanUtils.copyPropertiesIgnoreNull(userInfoDto, currentUser, "id");
+        if (userInfoDto.getAvatarImage() != null) {
+            currentUser.setAvatarImg(userInfoDto.getAvatarImage());
+        }
         currentUser.setUpdateTime(new Date());
         super.update(currentUser);
     }
