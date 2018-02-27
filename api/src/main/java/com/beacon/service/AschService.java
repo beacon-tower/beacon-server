@@ -20,6 +20,9 @@ public class AschService {
     @Value("${asch.root}")
     private String root;
 
+    @Value("${asch.dappId}")
+    private String dappId;
+
     @PostConstruct
     public void init() {
         AschSDK.Config.setAschServer(root);
@@ -35,5 +38,9 @@ public class AschService {
 
     public AschResult getPublicKey(String address) {
         return AschSDK.Account.getPublicKey(address);
+    }
+
+    public AschResult getAccount(String address) {
+        return AschSDK.Dapp.getAccount(dappId, address);
     }
 }

@@ -1,5 +1,6 @@
 package com.beacon.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.beacon.asch.sdk.AschResult;
 import com.beacon.commons.base.BaseDao;
@@ -13,6 +14,7 @@ import com.beacon.entity.User;
 import com.beacon.global.session.TokenManager;
 import com.beacon.global.session.TokenModel;
 import com.beacon.pojo.UserInfoDto;
+import com.beacon.pojo.UserWalletDto;
 import com.beacon.utils.BeanUtils;
 import com.beacon.utils.ShiroUtils;
 import org.springframework.stereotype.Service;
@@ -204,5 +206,37 @@ public class UserService extends BaseService<User, Integer> {
         }
         currentUser.setUpdateTime(new Date());
         super.update(currentUser);
+    }
+
+    /**
+     * 获取钱包金额
+     *
+     * @return 钱包信息
+     */
+    public UserWalletDto myWallet() {
+        User user = ShiroUtils.getUser();
+        String walletAddress = user.getWalletAddress();
+        AschResult aschResult = aschService.getAccount(walletAddress);
+        String balance = "0";
+        if (aschResult.isSuccessful()) {
+            Map<String, Object> parseMap = aschResult.parseMap();
+            String account = parseMap.get("account").toString();
+            JSONArray balances = (JSONArray) JSONObject.parseObject(account).get("balances");
+            if (balances != null && balances.size() > 0) {
+                for (int i = 0; i < balances.size(); i++) {
+                    JSONObject balanceObj = balances.getJSONObject(i);
+                    if ("FHChain.FHT".equals(balanceObj.get("currency"))) {
+                        balance = (String) balanceObj.get("balance");
+                    }
+                }
+            }
+        }
+        UserWalletDto userWalletDto = new UserWalletDto();
+        userWalletDto.setId(user.getId());
+        //TODO 读取链上的历史获取烽火币
+        userWalletDto.setHistoryBalance("0");
+        userWalletDto.setBalance(balance);
+        userWalletDto.setWalletAddress(walletAddress);
+        return userWalletDto;
     }
 }

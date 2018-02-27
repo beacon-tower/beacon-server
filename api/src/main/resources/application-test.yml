@@ -39,5 +39,6 @@ spring:
 
 asch:
   root: http://sofly.cc:4096
+  dappId: 398533f8cc90299733976ba764abf01e6be9c4b387fe7603e9d8b88ed216fe4e
 oss:
   config: aliyun

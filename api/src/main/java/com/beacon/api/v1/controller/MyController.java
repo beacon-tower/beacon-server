@@ -3,8 +3,10 @@ package com.beacon.api.v1.controller;
 import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
 import com.beacon.pojo.PageResult;
+import com.beacon.pojo.UserWalletDto;
 import com.beacon.service.UserFavoriteService;
 import com.beacon.service.UserFollowService;
+import com.beacon.service.UserService;
 import com.beacon.utils.PageUtils;
 import com.beacon.utils.ShiroUtils;
 import io.swagger.annotations.*;
@@ -23,6 +25,9 @@ import javax.inject.Inject;
 @RequestMapping("api/v1/my")
 @Api(value = "api/v1/my", tags = "我的")
 public class MyController extends BaseController {
+
+    @Inject
+    private UserService userService;
 
     @Inject
     private UserFavoriteService userFavoriteService;
@@ -82,5 +87,12 @@ public class MyController extends BaseController {
                                                @RequestParam(defaultValue = "10") Integer pageSize) {
         PageResult pageResult = PageUtils.getPageResult(userFollowService.myFollow(null, topicId, keyword, pageNumber, pageSize));
         return ResData.success(pageResult);
+    }
+
+    @ApiOperation(value = "我的钱包", notes = "我的钱包")
+    @GetMapping("wallet")
+    public ResData<UserWalletDto> wallet() {
+        UserWalletDto userWalletDto = userService.myWallet();
+        return ResData.success(userWalletDto);
     }
 }
