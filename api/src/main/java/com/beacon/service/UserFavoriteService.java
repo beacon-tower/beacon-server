@@ -80,7 +80,7 @@ public class UserFavoriteService extends BaseService<UserFavorite, Integer> {
         String querySql = "select p.* ";
         String countSql = "select count(p.id) ";
         String sql = "from user_favorite uf left join posts p on p.id = uf.posts_id left join user u on p.user_id = u.id"
-                + "where p.state = 'published' and u.id = " + ShiroUtils.getUserId();
+                + " where p.state = 'published' and u.id = " + ShiroUtils.getUserId();
         if (StringUtils.isNotEmpty(keyword)) {
             sql += " and (u.nickname like '%" + keyword + "%' or p.title like '%" + keyword + "%')";
         }
