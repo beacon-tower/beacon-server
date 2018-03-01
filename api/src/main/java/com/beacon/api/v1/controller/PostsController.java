@@ -38,8 +38,7 @@ public class PostsController extends BaseController {
     @PostMapping("{id}")
     public ResData detail(@ApiParam(name = "id", value = "文章id")
                           @PathVariable("id") Integer postsId) {
-        postsService.detail(postsId);
-        return ResData.success();
+        return ResData.success(postsService.detail(postsId));
     }
 
     @ApiOperation(value = "关注文章作者", notes = "文章详情页面，关注文章作者")

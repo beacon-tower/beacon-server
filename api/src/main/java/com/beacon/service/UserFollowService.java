@@ -74,7 +74,10 @@ public class UserFollowService extends BaseService<UserFollow, Integer> {
      * @return 是否关注
      */
     public boolean hasFollowedAuthor(Integer authorUserId) {
-        return userFollowDao.countByUserIdAndFollowUserId(ShiroUtils.getUserId(), authorUserId) > 0;
+        if (ShiroUtils.isLogin()) {
+            return userFollowDao.countByUserIdAndFollowUserId(ShiroUtils.getUserId(), authorUserId) > 0;
+        }
+        return false;
     }
 
     /**
