@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -86,7 +87,7 @@ public class UserFavoriteService extends BaseService<UserFavorite, Integer> {
         }
         countSql += sql;
         sql += " order by uf.id desc limit " + (pageNumber-1)*pageSize + ", " + pageSize;
-        List<Posts> postsList = jdbcTemplate.queryForList(querySql + sql, Posts.class);
+        List<Posts> postsList = jdbcTemplate.query(querySql + sql, new BeanPropertyRowMapper(Posts.class));
         Integer count = jdbcTemplate.queryForObject(countSql, Integer.class);
         List<PostsFavoriteDto> postsFavoriteDtoList = postsMapper.toFavoriteDtoList(postsList);
         return !CollectionUtils.isEmpty(postsList) ? new PageImpl<>(postsFavoriteDtoList, pageable, count) : null;
