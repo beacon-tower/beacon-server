@@ -84,9 +84,10 @@ public class UserFavoriteService extends BaseService<UserFavorite, Integer> {
         if (StringUtils.isNotEmpty(keyword)) {
             sql += " and (u.nickname like '%" + keyword + "%' or p.title like '%" + keyword + "%')";
         }
+        countSql += sql;
         sql += " order by uf.id desc limit " + pageNumber*pageSize + ", " + pageSize;
         List<Posts> postsList = jdbcTemplate.queryForList(querySql + sql, Posts.class);
-        Integer count = jdbcTemplate.queryForObject(countSql + sql, Integer.class);
+        Integer count = jdbcTemplate.queryForObject(countSql, Integer.class);
         List<PostsFavoriteDto> postsFavoriteDtoList = postsMapper.toFavoriteDtoList(postsList);
         return !CollectionUtils.isEmpty(postsList) ? new PageImpl<>(postsFavoriteDtoList, pageable, count) : null;
     }
