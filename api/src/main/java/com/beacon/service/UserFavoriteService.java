@@ -80,12 +80,12 @@ public class UserFavoriteService extends BaseService<UserFavorite, Integer> {
         String querySql = "select p.* ";
         String countSql = "select count(p.id) ";
         String sql = "from user_favorite uf left join posts p on p.id = uf.posts_id left join user u on p.user_id = u.id"
-                + " where p.state = 'published' and u.id = " + ShiroUtils.getUserId();
+                + " where p.state = 'published' and uf.user_id = " + ShiroUtils.getUserId();
         if (StringUtils.isNotEmpty(keyword)) {
             sql += " and (u.nickname like '%" + keyword + "%' or p.title like '%" + keyword + "%')";
         }
         countSql += sql;
-        sql += " order by uf.id desc limit " + pageNumber*pageSize + ", " + pageSize;
+        sql += " order by uf.id desc limit " + (pageNumber-1)*pageSize + ", " + pageSize;
         List<Posts> postsList = jdbcTemplate.queryForList(querySql + sql, Posts.class);
         Integer count = jdbcTemplate.queryForObject(countSql, Integer.class);
         List<PostsFavoriteDto> postsFavoriteDtoList = postsMapper.toFavoriteDtoList(postsList);
