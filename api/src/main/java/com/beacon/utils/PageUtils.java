@@ -19,6 +19,7 @@ public class PageUtils {
     /**
      * 封装分页数据
      */
+    @SuppressWarnings("unchecked")
     public static PageResult getPageResult(Page<?> objPage) {
         if (objPage == null) {
             return null;

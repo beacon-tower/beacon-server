@@ -45,6 +45,12 @@ public class PostsFavoriteDto {
     @ApiModelProperty(notes = "格式化的发表时间，例如：几分钟前")
     private String formatTime;
 
+    @ApiModelProperty(notes = "是否关注")
+    private boolean followed;
+
+    @ApiModelProperty(notes = "话题名称")
+    private String topicName;
+
     public Integer getId() {
         return id;
     }
@@ -131,5 +137,21 @@ public class PostsFavoriteDto {
 
     public void setFormatTime(String formatTime) {
         this.formatTime = formatTime;
+    }
+
+    public boolean isFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(boolean followed) {
+        this.followed = followed;
+    }
+
+    public String getTopicName() {
+        return topicName;
+    }
+
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
     }
 }

@@ -3,6 +3,8 @@ package com.beacon.pojo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+
 /**
  * 分页结果
  *
@@ -11,10 +13,10 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 2018/1/24
  */
 @ApiModel(value = "PageResult", description = "分页结果")
-public class PageResult {
+public class PageResult<T> {
 
     @ApiModelProperty(notes = "数据列表")
-    private Object resultList;
+    private List<T> resultList;
 
     @ApiModelProperty(notes = "总页数")
     private int totalPages;
@@ -28,11 +30,11 @@ public class PageResult {
     @ApiModelProperty(notes = "每页显示的数量")
     private int size;
 
-    public Object getResultList() {
+    public List<T> getResultList() {
         return resultList;
     }
 
-    public void setResultList(Object resultList) {
+    public void setResultList(List<T> resultList) {
         this.resultList = resultList;
     }
 

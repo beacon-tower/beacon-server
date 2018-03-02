@@ -3,6 +3,8 @@ package com.beacon.api.v1.controller;
 import com.beacon.commons.base.BaseController;
 import com.beacon.commons.response.ResData;
 import com.beacon.pojo.PageResult;
+import com.beacon.pojo.PostsFavoriteDto;
+import com.beacon.pojo.PostsListOutDto;
 import com.beacon.pojo.UserWalletDto;
 import com.beacon.service.UserFavoriteService;
 import com.beacon.service.UserFollowService;
@@ -42,10 +44,10 @@ public class MyController extends BaseController {
             @ApiImplicitParam(name = "pageSize", value = "每页多少条", paramType = "query", dataType = "int"),
     })
     @GetMapping("favorite")
-    public ResData<PageResult> getFavorite(@RequestParam(required = false) String keyword,
+    public ResData<PageResult<PostsFavoriteDto>> getFavorite(@RequestParam(required = false) String keyword,
                                            @RequestParam(defaultValue = "1") Integer pageNumber,
                                            @RequestParam(defaultValue = "10") Integer pageSize) {
-        PageResult pageResult = PageUtils.getPageResult(userFavoriteService.myFavorite(keyword, pageNumber, pageSize));
+        PageResult<PostsFavoriteDto> pageResult = PageUtils.getPageResult(userFavoriteService.myFavorite(keyword, pageNumber, pageSize));
         return ResData.success(pageResult);
     }
 
@@ -65,11 +67,11 @@ public class MyController extends BaseController {
             @ApiImplicitParam(name = "pageSize", value = "每页多少条", paramType = "query", dataType = "int"),
     })
     @GetMapping("follow")
-    public ResData<PageResult> getFollow(@RequestParam(required = false) Integer topicId,
-                                         @RequestParam(required = false) String keyword,
-                                         @RequestParam(defaultValue = "1") Integer pageNumber,
-                                         @RequestParam(defaultValue = "10") Integer pageSize) {
-        PageResult pageResult = PageUtils.getPageResult(userFollowService.myFollow(ShiroUtils.getUserId(), topicId, keyword, pageNumber, pageSize));
+    public ResData<PageResult<PostsListOutDto>> getFollow(@RequestParam(required = false) Integer topicId,
+                                                          @RequestParam(required = false) String keyword,
+                                                          @RequestParam(defaultValue = "1") Integer pageNumber,
+                                                          @RequestParam(defaultValue = "10") Integer pageSize) {
+        PageResult<PostsListOutDto> pageResult = PageUtils.getPageResult(userFollowService.myFollow(ShiroUtils.getUserId(), topicId, keyword, pageNumber, pageSize));
         return ResData.success(pageResult);
     }
 
@@ -81,11 +83,11 @@ public class MyController extends BaseController {
             @ApiImplicitParam(name = "pageSize", value = "每页多少条", paramType = "query", dataType = "int"),
     })
     @GetMapping("recommend_follow")
-    public ResData<PageResult> recommendFollow(@RequestParam(required = false) Integer topicId,
+    public ResData<PageResult<PostsListOutDto>> recommendFollow(@RequestParam(required = false) Integer topicId,
                                                @RequestParam(required = false) String keyword,
                                                @RequestParam(defaultValue = "1") Integer pageNumber,
                                                @RequestParam(defaultValue = "10") Integer pageSize) {
-        PageResult pageResult = PageUtils.getPageResult(userFollowService.myFollow(null, topicId, keyword, pageNumber, pageSize));
+        PageResult<PostsListOutDto> pageResult = PageUtils.getPageResult(userFollowService.myFollow(null, topicId, keyword, pageNumber, pageSize));
         return ResData.success(pageResult);
     }
 

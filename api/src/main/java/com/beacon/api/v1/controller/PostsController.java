@@ -5,6 +5,7 @@ import com.beacon.commons.response.ResData;
 import com.beacon.commons.utils.AssertUtils;
 import com.beacon.pojo.CommentInputDto;
 import com.beacon.pojo.CommentOutDto;
+import com.beacon.pojo.CommentParentOutDto;
 import com.beacon.pojo.PageResult;
 import com.beacon.service.PostsService;
 import com.beacon.service.UserFollowService;
@@ -84,12 +85,12 @@ public class PostsController extends BaseController {
             @ApiImplicitParam(name = "pageSize", value = "每页多少条", paramType = "query", dataType = "int"),
     })
     @GetMapping("{id}/comments")
-    public ResData<PageResult> commentList(@ApiParam(name = "id", value = "文章id")
+    public ResData<PageResult<CommentParentOutDto>> commentList(@ApiParam(name = "id", value = "文章id")
                                            @PathVariable("id") Integer postsId,
                                            @RequestParam(defaultValue = "0") Integer pageNumber,
                                            @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        PageResult pageResult = PageUtils.getPageResult(postsService.commentList(postsId, pageNumber, pageSize));
+        PageResult<CommentParentOutDto> pageResult = PageUtils.getPageResult(postsService.commentList(postsId, pageNumber, pageSize));
         return ResData.success(pageResult);
     }
 }

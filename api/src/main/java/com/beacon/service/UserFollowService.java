@@ -90,7 +90,7 @@ public class UserFollowService extends BaseService<UserFollow, Integer> {
      * @param pageSize 每页数
      * @return 分页数据
      */
-    public Page<?> myFollow(Integer userId, Integer topicId, String keyword, Integer pageNumber, Integer pageSize) {
+    public Page<PostsListOutDto> myFollow(Integer userId, Integer topicId, String keyword, Integer pageNumber, Integer pageSize) {
         Pageable pageable = new PageRequest(pageNumber, pageSize);
         Integer start = (pageNumber*pageSize-pageSize);
         int countPostsByHot = postsSqlDao.countPostsByHot(keyword, userId, topicId);
