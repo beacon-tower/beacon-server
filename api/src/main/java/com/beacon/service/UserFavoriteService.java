@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.beacon.enums.code.PostsResCode.POSTS_ID_ERROR;
 
@@ -81,13 +82,18 @@ public class UserFavoriteService extends BaseService<UserFavorite, Integer> {
         String querySql = "select p.* ";
         String countSql = "select count(p.id) ";
         String sql = "from user_favorite uf left join posts p on p.id = uf.posts_id left join user u on p.user_id = u.id"
-                + " where p.state = 'published' and uf.user_id = " + ShiroUtils.getUserId();
+                + " where p.state = 'published' AND p.deleted = FALSE and uf.user_id = " + ShiroUtils.getUserId();
         if (StringUtils.isNotEmpty(keyword)) {
             sql += " and (u.nickname like '%" + keyword + "%' or p.title like '%" + keyword + "%')";
         }
         countSql += sql;
         sql += " order by uf.id desc limit " + (pageNumber-1)*pageSize + ", " + pageSize;
         List<Posts> postsList = jdbcTemplate.query(querySql + sql, new BeanPropertyRowMapper(Posts.class));
+        postsList = postsList.stream().map(posts -> {
+            Posts p = postsService.findById(posts.getId());
+            posts.setUser(p.getUser());
+            return posts;
+        }).collect(Collectors.toList());
         Integer count = jdbcTemplate.queryForObject(countSql, Integer.class);
         List<PostsFavoriteDto> postsFavoriteDtoList = postsMapper.toFavoriteDtoList(postsList);
         return !CollectionUtils.isEmpty(postsList) ? new PageImpl<>(postsFavoriteDtoList, pageable, count) : null;
