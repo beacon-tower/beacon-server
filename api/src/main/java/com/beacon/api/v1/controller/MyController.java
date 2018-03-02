@@ -45,8 +45,8 @@ public class MyController extends BaseController {
     })
     @GetMapping("favorite")
     public ResData<PageResult<PostsFavoriteDto>> getFavorite(@RequestParam(required = false) String keyword,
-                                           @RequestParam(defaultValue = "1") Integer pageNumber,
-                                           @RequestParam(defaultValue = "10") Integer pageSize) {
+                                                             @RequestParam(defaultValue = "1") Integer pageNumber,
+                                                             @RequestParam(defaultValue = "10") Integer pageSize) {
         PageResult<PostsFavoriteDto> pageResult = PageUtils.getPageResult(userFavoriteService.myFavorite(keyword, pageNumber, pageSize));
         return ResData.success(pageResult);
     }
@@ -84,9 +84,9 @@ public class MyController extends BaseController {
     })
     @GetMapping("recommend_follow")
     public ResData<PageResult<PostsListOutDto>> recommendFollow(@RequestParam(required = false) Integer topicId,
-                                               @RequestParam(required = false) String keyword,
-                                               @RequestParam(defaultValue = "1") Integer pageNumber,
-                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+                                                                @RequestParam(required = false) String keyword,
+                                                                @RequestParam(defaultValue = "1") Integer pageNumber,
+                                                                @RequestParam(defaultValue = "10") Integer pageSize) {
         PageResult<PostsListOutDto> pageResult = PageUtils.getPageResult(userFollowService.myFollow(null, topicId, keyword, pageNumber, pageSize));
         return ResData.success(pageResult);
     }

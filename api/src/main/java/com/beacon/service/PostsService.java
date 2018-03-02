@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.beacon.enums.code.PostsResCode.POSTS_ID_ERROR;
+import static com.beacon.enums.code.PostsResCode.POSTS_REPEAT_FAVORITE;
 import static com.beacon.enums.code.PostsResCode.POSTS_REPEAT_LIKED;
 
 /**
@@ -256,7 +257,7 @@ public class PostsService extends BaseService<Posts, Integer> {
     public void addFavorite(Integer postsId) {
         Integer userId = ShiroUtils.getUserId();
         boolean hasFavorite = userFavoriteService.hasFavorite(userId, postsId);
-        AssertUtils.isTrue(POSTS_REPEAT_LIKED, !hasFavorite);
+        AssertUtils.isTrue(POSTS_REPEAT_FAVORITE, !hasFavorite);
 
         Posts posts = this.findPublishedPostsById(postsId);
         AssertUtils.notNull(POSTS_ID_ERROR, posts);
