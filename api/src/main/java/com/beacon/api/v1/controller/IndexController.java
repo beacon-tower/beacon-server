@@ -51,12 +51,12 @@ public class IndexController {
     public ResData<List<PostsListOutDto>> getPostsList(@RequestParam(defaultValue = "1") Integer pageNumber,
                                                        @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        User user = ShiroUtils.getUser();
-        if (user == null) {
+       // User user = ShiroUtils.getUser();
+       // if (user == null) {
             return ResData.success(indexService.findPostsByHot(null, pageNumber, pageSize));
-        }
+       // }
 
-        return ResData.success(null);
+        // return ResData.success(null);
     }
 
 

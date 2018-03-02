@@ -14,7 +14,7 @@ import java.io.BufferedOutputStream;
 
 /**
  * @author Ian.Su
- * @version $Id TokenController.java, v 0.1 2018/1/30 14:18 Ian.Su Exp $
+ * @version $Id AssistController.java, v 0.1 2018/1/30 14:18 Ian.Su Exp $
  **/
 @RestController
 @RequestMapping("api/v1/assist")
@@ -26,7 +26,7 @@ public class AssistController {
 
             @ApiImplicitParam(name = "secret", required = true, paramType = "form", dataType = "string"),
     })
-    @PostMapping("token/download")
+    @PostMapping("secret/download")
     public void login(@RequestParam String secret, HttpServletResponse response) throws Exception {
 
         response.setContentType("text/plain");

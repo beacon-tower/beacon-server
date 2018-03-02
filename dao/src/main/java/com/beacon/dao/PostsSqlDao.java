@@ -24,7 +24,7 @@ public class PostsSqlDao {
 
     public List<PostsListOutDto> findPostsByHot(String keyword, Integer userId, Integer topicId, Integer start, Integer limit) {
 
-        String sql = "	SELECT		" +
+        String sql = "	SELECT	DISTINCT	" +
                 "		p.id,	" +
                 "		p.comment_count,	" +
                 "		p.coin_count,	" +
