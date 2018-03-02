@@ -24,7 +24,7 @@ public class PostsSqlDao {
 
     public List<PostsListOutDto> findPostsByHot(String keyword, Integer userId, Integer topicId, Integer start, Integer limit) {
 
-        String sql = "	SELECT	DISTINCT	" +
+        String sql = "	SELECT	" +
                 "		p.id,	" +
                 "		p.comment_count,	" +
                 "		p.coin_count,	" +
@@ -47,7 +47,6 @@ public class PostsSqlDao {
                 "	LEFT JOIN user u ON u.id = p.user_id		" +
                 "	LEFT JOIN  image i ON i.id = u.avatar_img_id		" +
                 "   LEFT JOIN  topic t ON t.id = p.topic_id " +
-                "   LEFT JOIN  user_topic ut ON ut.user_id = u.id " +
                 "	WHERE		" +
                 "		p.state = 'published'	" +
                 "	AND p.deleted = 0		" +
